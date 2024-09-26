@@ -13,11 +13,13 @@ class _SearchState extends State<Search> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: pageBackground,
-      body: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("  Results:", style: TextStyle(color: Colors.white, fontFamily: "Ubuntu", fontWeight: FontWeight.w700),)
-        ],
+      body: const SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("  Results:", style: TextStyle(color: Colors.white, fontFamily: "Ubuntu", fontWeight: FontWeight.w700),)
+          ],
+        ),
       ),
     );
   }

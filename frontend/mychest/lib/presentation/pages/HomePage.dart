@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mychest/global/colors/colorsScheme.dart';
-import 'package:mychest/presentation/pages/discover.dart';
+import 'package:mychest/presentation/pages/subpages/discover.dart';
 import 'package:mychest/presentation/pages/profile/loginPage.dart';
 import 'package:mychest/presentation/pages/profile/profilePage.dart';
 import 'package:mychest/presentation/state_manager/providers/appProviders.dart';
@@ -99,6 +99,9 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
           ),
         ),
         actions: [
+          Padding(
+            padding:isMobile?const EdgeInsets.all(0): const EdgeInsets.all(20),
+            child: IconButton(onPressed: (){}, icon: const Icon(UniconsLine.shopping_cart_alt, color: Colors.white,size: 30,))),
           TextButton(
             onPressed: (){
               if(!ref.watch(ProfileNotifierProvider).isEmpty()) {
@@ -112,8 +115,8 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
               children: [
                 Center(
                   child: Container(
-                    width: 50,
-                    height: 50,
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(colors: gradient),
@@ -122,8 +125,8 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
                 ),
                 Center(
                   child: Container(
-                  width: 45,
-                  height: 45,
+                  width: 35,
+                  height: 35,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: pageBackground

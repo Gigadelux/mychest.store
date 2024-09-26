@@ -6,8 +6,8 @@ class Product {
   String image;
   double price;
   int quantity;
-  int productType;
-  List<String> avaiblePlatforms;
+  int type;
+  List<String> categories;
   String? activationKey;
   Product({
     required this.id,
@@ -16,8 +16,8 @@ class Product {
     required this.image,
     required this.price,
     required this.quantity,
-    required this.productType,
-    required this.avaiblePlatforms,
+    required this.type,
+    required this.categories,
     this.activationKey
   });
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -28,9 +28,10 @@ class Product {
       image: json['image'],
       price: json['price'].toDouble(),
       quantity: json['quantity'],
-      productType: json['productType'],
-      avaiblePlatforms: List<String>.from(json['avaiblePlatforms']),
+      type: json['type'],
+      categories: json['categories'],
       activationKey: json['activationKey'],
     );
   }
+  
 }
