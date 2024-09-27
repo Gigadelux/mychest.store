@@ -12,6 +12,7 @@ public class Category {
     @GeneratedValue
     private Long id;
 
+    @Getter
     @Column(unique = true)
     private String category;
 

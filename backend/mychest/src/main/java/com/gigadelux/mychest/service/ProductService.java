@@ -5,12 +5,14 @@ import com.gigadelux.mychest.entity.Product.Product;
 import com.gigadelux.mychest.exception.CategoryDoesNotExistException;
 import com.gigadelux.mychest.exception.ProductNotFound;
 import com.gigadelux.mychest.exception.ProductsByCategoryNotFoundException;
+import com.gigadelux.mychest.repository.BannerRepository;
 import com.gigadelux.mychest.repository.CategoryRepository;
 import com.gigadelux.mychest.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -22,6 +24,9 @@ public class ProductService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private BannerRepository bannerRepository;
+
     @Transactional
     public List<Product> getProductsByCategory(String category) throws ProductsByCategoryNotFoundException {
         List<Product> res = productRepository.findProductsByCategory(category);
@@ -30,9 +35,9 @@ public class ProductService {
         return res;
     }
 
-    public void insertProduct(@RequestBody Product p, Category cat) throws CategoryDoesNotExistException{
-        if(categoryRepository.existsById(cat.getId())) throw new CategoryDoesNotExistException();
-        p.setCategory(cat);
+    public void insertProduct(@RequestBody Product p,@RequestParam Long catId) throws CategoryDoesNotExistException{
+        if(!categoryRepository.existsById(catId)) throw new CategoryDoesNotExistException();
+        p.setCategory(categoryRepository.getReferenceById(catId));
         productRepository.save(p);
     }
 
@@ -54,6 +59,13 @@ public class ProductService {
         p.setPlatforms(platforms);
         p.setCategory(cat);
         productRepository.save(p);
+    }
+
+    public List<Product> getFeatured() throws CategoryDoesNotExistException, ProductsByCategoryNotFoundException{
+        Category bannerCat = bannerRepository.findFirstBy();
+        if(!categoryRepository.existsById(bannerCat.getId())) throw new CategoryDoesNotExistException();
+        List<Product> res = getProductsByCategory(bannerCat.getCategory());
+        return res;
     }
 
 }
