@@ -3,9 +3,13 @@ package com.gigadelux.mychest.entity.Product;
 import com.gigadelux.mychest.entity.Banner;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Entity
+@Getter
+@Setter
 public class Category {
     @Getter
     @Id

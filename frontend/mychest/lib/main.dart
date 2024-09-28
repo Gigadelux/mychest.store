@@ -4,11 +4,11 @@ import 'package:mychest/presentation/pages/HomePage.dart';
 
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProviderScope(child:MyApp()));
+  runApp(const ProviderScope(child:MychestMain()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MychestMain extends StatelessWidget {
+  const MychestMain({super.key});
 
   // This widget is the root of your application.
   @override

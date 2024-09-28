@@ -60,43 +60,50 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
           borderRadius: BorderRadius.circular(30),
           child: Image.asset("assets/logo.jpg", width: 50, height: 50,),
         ),
-        title: Container(
-          width: isMobile?MediaQuery.of(context).size.width/2: MediaQuery.of(context).size.width/3,
-          height: 35,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 40, 40, 40),
-            borderRadius: BorderRadius.circular(10),
-
-          ),
-          child: Center(
-            child: TextField(
-              autocorrect: true,
-              style: const TextStyle(color: Colors.white, fontFamily: "Ubuntu"),
-              cursorColor: Colors.white,
-              autofocus: false,
-              focusNode: _focusNode,
-              minLines: 1,
-              maxLines: 1,
-              controller: textEditingController,
-              textAlignVertical: TextAlignVertical.center,
-              decoration: InputDecoration(
-                labelText: _isFocused?"":"Search your treasure",
-                labelStyle: const TextStyle(color: Color.fromARGB(255, 163, 163, 163)),
-                fillColor: const Color.fromARGB(255, 40, 40, 40),
-                prefixIcon: const Icon(UniconsLine.search_alt, color: Colors.white,),
-                border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    borderSide: BorderSide.none, // Remove default border
-                  ),
-                contentPadding: const EdgeInsets.all(0),
-                floatingLabelBehavior: FloatingLabelBehavior.never,
-                isDense: true,
-                alignLabelWithHint: true,
-                
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(onPressed: (){}, icon: const Icon(Icons.image_search_rounded, color: Colors.white, size: 30,)),
+            const SizedBox(width:10),
+            Container(
+              width: isMobile?MediaQuery.of(context).size.width/2: MediaQuery.of(context).size.width/3,
+              height: 35,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 40, 40, 40),
+                borderRadius: BorderRadius.circular(10),
+            
               ),
-                         
+              child: Center(
+                child: TextField(
+                  autocorrect: true,
+                  style: const TextStyle(color: Colors.white, fontFamily: "Ubuntu"),
+                  cursorColor: Colors.white,
+                  autofocus: false,
+                  focusNode: _focusNode,
+                  minLines: 1,
+                  maxLines: 1,
+                  controller: textEditingController,
+                  textAlignVertical: TextAlignVertical.center,
+                  decoration: InputDecoration(
+                    labelText: _isFocused?"":"Search your treasure",
+                    labelStyle: const TextStyle(color: Color.fromARGB(255, 163, 163, 163)),
+                    fillColor: const Color.fromARGB(255, 40, 40, 40),
+                    prefixIcon: const Icon(UniconsLine.search_alt, color: Colors.white,),
+                    border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide.none, // Remove default border
+                      ),
+                    contentPadding: const EdgeInsets.all(0),
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    isDense: true,
+                    alignLabelWithHint: true,
+                    
+                  ),
+                             
+                ),
+              ),
             ),
-          ),
+          ],
         ),
         actions: [
           Padding(
