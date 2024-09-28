@@ -41,9 +41,11 @@ public class ProductService {
         productRepository.save(p);
     }
 
-    public void removeProduct(Long id) throws ProductNotFound{
+    public Product removeProduct(Long id) throws ProductNotFound{
         if(!productRepository.existsById(id)) throw new ProductNotFound();
+        Product product = productRepository.getReferenceById(id);
         productRepository.deleteById(id);
+        return product;
     }
 
     public void editProduct(Long id, String name, String description, String image, int quantity, float price, int type ,String platforms, Category cat) throws ProductNotFound, CategoryDoesNotExistException{
@@ -68,4 +70,7 @@ public class ProductService {
         return res;
     }
 
+    public List<Product> searchProducts(String name) {
+        return productRepository.findProductByNameContaining(name);
+    }
 }

@@ -3,6 +3,7 @@ package com.gigadelux.mychest.controller;
 import com.gigadelux.mychest.entity.Product.Category;
 import com.gigadelux.mychest.entity.Product.Product;
 import com.gigadelux.mychest.exception.CategoryDoesNotExistException;
+import com.gigadelux.mychest.exception.ProductNotFound;
 import com.gigadelux.mychest.exception.ProductsByCategoryNotFoundException;
 import com.gigadelux.mychest.repository.BannerRepository;
 import com.gigadelux.mychest.repository.CategoryRepository;
@@ -13,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.PUT;
 import java.util.List;
 
 @RestController
@@ -36,6 +39,23 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/searchProductsByCategory")
+    public ResponseEntity searchProductsByCategory(@RequestParam String category){
+        List<Product> res = null;
+        try {
+            res = productService.getProductsByCategory(category);
+        }catch(ProductsByCategoryNotFoundException e){
+                return new ResponseEntity("Error category does not exist",HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/searchProducts")
+    public ResponseEntity searchProducts(@RequestParam String name){
+        List<Product> res = productService.searchProducts(name);
+        return ResponseEntity.ok(res);
+    }
+
     @PreAuthorize("hasAnyAuthority('admin')")
     @RequestMapping("/addProduct")
     public ResponseEntity addProduct(@RequestBody Product product, @RequestParam Long categoryId) throws CategoryDoesNotExistException{
@@ -47,6 +67,34 @@ public class ProductController {
         return new ResponseEntity("Product save successful",HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('admin')")
+    @RequestMapping("/removeProduct")
+    public ResponseEntity removeProduct(@RequestParam Long id){
+        Product res = null;
+        try {
+            res=productService.removeProduct(id);
+        }catch (ProductNotFound e){
+            return new ResponseEntity("the product with id "+id+" has not been found",HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(res);
+    }
 
-
+    @PreAuthorize("hasAnyAuthority('admin')")
+    @RequestMapping("/editProduct")
+    public ResponseEntity editProduct(
+            @RequestParam Long id,
+            @RequestParam String name,
+            @RequestParam String description,
+            @RequestParam String image,
+            @RequestParam int quantity,
+            @RequestParam float price,
+            @RequestParam int type,
+            @RequestParam String platforms,
+            @RequestBody Category cat){
+        try {
+            productService.editProduct(id, name, description, image, quantity, price, type, platforms, cat);
+        }catch (ProductNotFound e){return new ResponseEntity("error product not found", HttpStatus.BAD_REQUEST);}
+        catch (CategoryDoesNotExistException e){return new ResponseEntity("error Category does not exist", HttpStatus.BAD_REQUEST);}
+        return new ResponseEntity("Product edit successful",HttpStatus.OK);
+    }
 }
