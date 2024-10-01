@@ -21,5 +21,5 @@ public class CreditCard { //--> CONTROL DATA FORMATTING IN CLIENT
     private String expire_time; //Always in the format mm/YYYY
 
     @OneToOne
-    private User user;
+    private App_User user;
 }

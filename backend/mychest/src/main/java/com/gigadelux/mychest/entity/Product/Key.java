@@ -1,5 +1,6 @@
 package com.gigadelux.mychest.entity.Product;
 
+import com.gigadelux.mychest.entity.User.Order;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,4 +18,9 @@ public class Key {
 
     @ManyToOne(optional = false)
     private Product product;
+
+    private String productName;
+
+    @ManyToOne
+    private Order order;
 }

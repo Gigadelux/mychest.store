@@ -7,7 +7,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class User {
+public class App_User {
     @Id
     @GeneratedValue
     private Long id;
@@ -18,4 +18,7 @@ public class User {
     @OneToOne
     @JoinColumn(name = "credit_card_id", referencedColumnName = "id")
     private CreditCard credit_card;
+
+    @OneToMany
+    private Order order;
 }
