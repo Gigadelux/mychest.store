@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface KeyRepository extends JpaRepository<Key,Long> {
-    @Query(value = "SELECT * FROM activation_key WHERE product_id = :product_id ORDER BY RANDOM() :limit", nativeQuery = true)
-    List<Key> getRandomKey(@Param("product_id") Long product_id,@Param("limit") int limit);
+    @Query(value = "SELECT * FROM activation_key WHERE product_id = :product_id ORDER BY RANDOM() LIMIT :limit", nativeQuery = true)
+    List<Key> getRandomKeys(@Param("product_id") Long product_id, @Param("limit") int limit);
     Key findKeyByActivationKey(String key);
 }

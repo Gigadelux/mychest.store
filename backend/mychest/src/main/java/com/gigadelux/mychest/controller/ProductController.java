@@ -57,10 +57,17 @@ public class ProductController {
     }
 
     @PreAuthorize("hasAnyAuthority('admin')")
-    @RequestMapping("/addProduct")
-    public ResponseEntity addProduct(@RequestBody Product product, @RequestParam Long categoryId) throws CategoryDoesNotExistException{
+    @PostMapping("/addProduct")
+    public ResponseEntity addProduct(
+            @RequestParam String name,
+            @RequestParam String description,
+            @RequestParam String image,
+            @RequestParam int quantity,
+            @RequestParam float price,
+            @RequestParam int type,
+            @RequestParam String platforms, @RequestParam Long categoryId) throws CategoryDoesNotExistException{
         try{
-            productService.insertProduct(product,categoryId);
+            productService.insertProduct(name,description,image,quantity,price,type,platforms,categoryId);
         }catch (CategoryDoesNotExistException e) {
             return new ResponseEntity("Referencing category not found", HttpStatus.NOT_FOUND);
         }
@@ -68,7 +75,7 @@ public class ProductController {
     }
 
     @PreAuthorize("hasAnyAuthority('admin')")
-    @RequestMapping("/removeProduct")
+    @PostMapping("/removeProduct")
     public ResponseEntity removeProduct(@RequestParam Long id){
         Product res = null;
         try {
@@ -80,7 +87,7 @@ public class ProductController {
     }
 
     @PreAuthorize("hasAnyAuthority('admin')")
-    @RequestMapping("/editProduct")
+    @PostMapping("/editProduct")
     public ResponseEntity editProduct(
             @RequestParam Long id,
             @RequestParam String name,

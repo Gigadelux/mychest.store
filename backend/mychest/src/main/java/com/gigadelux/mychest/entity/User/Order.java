@@ -2,10 +2,10 @@ package com.gigadelux.mychest.entity.User;
 
 import com.gigadelux.mychest.entity.Product.Key;
 import jakarta.persistence.*;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.catalina.User;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,10 +16,8 @@ public class Order {
     private Long id;
 
     @ManyToOne
-    private App_User user;
+    private AppUser user;
 
     @OneToMany
-    @JoinColumn(name = "key_id", referencedColumnName = "id")
-    private Key key;
-    
+    private List<Key> keys;
 }

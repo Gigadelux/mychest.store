@@ -13,7 +13,7 @@ public class Cart {
     private Long id;
 
     @ManyToOne
-    private App_User user;
+    private AppUser user;
 
     @OneToMany
     private CartItem cartItem;

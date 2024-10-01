@@ -3,11 +3,12 @@ package com.gigadelux.mychest.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
-public class App_User {
+public class AppUser {
     @Id
     @GeneratedValue
     private Long id;
@@ -20,5 +21,5 @@ public class App_User {
     private CreditCard credit_card;
 
     @OneToMany
-    private Order order;
+    private List<Order> orders;
 }

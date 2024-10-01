@@ -22,4 +22,12 @@ public class CategoryService {
         if(!categoryRepository.existsById(id)) throw new CategoryDoesNotExistException();
         return categoryRepository.getReferenceById(id);
     }
+
+    public Category addCategory(String name){
+        Category cat = new Category();
+        cat.setName(name);
+        cat.setPopularity(0L);
+        categoryRepository.save(cat);
+        return cat;
+    }
 }

@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface CategoryRepository extends JpaRepository<Category,Long> {
 
     @Query(value = "SELECT * FROM category ORDERED BY popularity DESC LIMIT ?1", nativeQuery = true)

@@ -8,7 +8,7 @@ import com.gigadelux.mychest.exception.ProductsByCategoryNotFoundException;
 import com.gigadelux.mychest.repository.BannerRepository;
 import com.gigadelux.mychest.repository.CategoryRepository;
 import com.gigadelux.mychest.repository.ProductRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +27,7 @@ public class ProductService {
     @Autowired
     private BannerRepository bannerRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Product> getProductsByCategory(String category) throws ProductsByCategoryNotFoundException {
         List<Product> res = productRepository.findProductsByCategory(category);
         if(res.isEmpty()) throw new ProductsByCategoryNotFoundException();
@@ -35,8 +35,9 @@ public class ProductService {
         return res;
     }
 
-    public void insertProduct(@RequestBody Product p,@RequestParam Long catId) throws CategoryDoesNotExistException{
+    public void insertProduct(String name, String description, String image, int quantity, float price, int type, String platforms, Long catId) throws CategoryDoesNotExistException{
         if(!categoryRepository.existsById(catId)) throw new CategoryDoesNotExistException();
+        Product p = new Product();
         p.setCategory(categoryRepository.getReferenceById(catId));
         productRepository.save(p);
     }
@@ -63,13 +64,14 @@ public class ProductService {
         productRepository.save(p);
     }
 
+    @Transactional(readOnly = true)
     public List<Product> getFeatured() throws CategoryDoesNotExistException, ProductsByCategoryNotFoundException{
         Category bannerCat = bannerRepository.findFirstBy();
         if(!categoryRepository.existsById(bannerCat.getId())) throw new CategoryDoesNotExistException();
-        List<Product> res = getProductsByCategory(bannerCat.getCategory());
-        return res;
+        return getProductsByCategory(bannerCat.getName());
     }
 
+    @Transactional(readOnly = true)
     public List<Product> searchProducts(String name) {
         return productRepository.findProductByNameContaining(name);
     }
