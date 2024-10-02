@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,9 +18,6 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
     @Query(value = "SELECT * FROM category ORDERED BY popularity DESC LIMIT ?1", nativeQuery = true)
     List<Category> mostPopular(int limit);
 
-    @Modifying
-    @Transactional
-    @Query(value = "UPDATE Category c SET c.popularity = c.popularity + 1 WHERE c.category = :cat")
-    void incrementPopularity(String cat);
+    Category findByName(String name);
 
 }

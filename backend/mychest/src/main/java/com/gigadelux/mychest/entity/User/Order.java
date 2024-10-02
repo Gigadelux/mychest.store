@@ -10,6 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Table(name = "orders") // since Order is a reserved word
 public class Order {
     @Id
     @GeneratedValue
@@ -17,6 +18,9 @@ public class Order {
 
     @ManyToOne
     private AppUser user;
+
+    @OneToOne
+    private CreditCard creditCard;
 
     @OneToMany
     private List<Key> keys;

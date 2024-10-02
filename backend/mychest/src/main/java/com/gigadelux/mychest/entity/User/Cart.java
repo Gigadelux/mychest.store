@@ -3,6 +3,7 @@ package com.gigadelux.mychest.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,7 +17,7 @@ public class Cart {
     private AppUser user;
 
     @OneToMany
-    private CartItem cartItem;
+    private List<CartItem> cartItem;
 
     private String postal_code;
 }

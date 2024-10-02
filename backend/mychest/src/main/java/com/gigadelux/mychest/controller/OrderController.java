@@ -16,5 +16,5 @@ public class OrderController {
     @Autowired
     AppUserService appUserService;
 
-    //@PostMapping() TODO insertOrder
+    //@PostMapping("/pay")
 }

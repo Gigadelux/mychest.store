@@ -10,6 +10,7 @@ import com.gigadelux.mychest.exception.ProductNotFound;
 import com.gigadelux.mychest.repository.KeyRepository;
 import com.gigadelux.mychest.repository.OrderRepository;
 import com.gigadelux.mychest.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,13 +35,13 @@ public class KeyService {
         return k;
     }
 
-    private void insertKeyToOrder(Long keyId, Long orderId) throws NoKeyFoundException, OrderNotFoundException { //it inherits Rollback
+    @Transactional
+    private void insertKeyToOrder(Long keyId, Order order) throws NoKeyFoundException, OrderNotFoundException { //it inherits Rollback
         if(!keyRepository.existsById(keyId)) throw new NoKeyFoundException();
         Key k = keyRepository.getReferenceById(keyId);
-        if(!orderRepository.existsById(orderId)) throw new OrderNotFoundException();
-        Order orderReassignment = orderRepository.getReferenceById(orderId);
+//     if(!orderRepository.existsById(orderId)) throw new OrderNotFoundException(); //not.........
         k.setProduct(null);
-        k.setOrder(orderReassignment);
+        k.setOrder(order);
         keyRepository.save(k);
     }
     private void insertKeyToProduct(Long keyId, Long pId) throws ProductNotFound { //it inherits Rollback
@@ -57,14 +58,14 @@ public class KeyService {
         }
     }
 
-    public void insertKeysToOrder(Long orderId, Long productId, int quantity) throws OrderNotFoundException, InsufficientQuantityException, ProductNotFound, NoKeyFoundException {
+    @Transactional
+    public void insertKeysToOrder(Order order, Long productId, int quantity) throws OrderNotFoundException, ProductNotFound, NoKeyFoundException {
         if(!productRepository.existsById(productId)) throw new ProductNotFound();
-        Product reference = productRepository.getReferenceById(orderId);
-        if(reference.getQuantity()<quantity) throw new InsufficientQuantityException();
-        if(!orderRepository.existsById(orderId)) throw new OrderNotFoundException();
+        //Product reference = productRepository.getReferenceById(orderId);
+        //if(reference.getQuantity()<quantity) throw new InsufficientQuantityException(); //REDUNDANT
         List<Key> keys = keyRepository.getRandomKeys(productId,quantity);
         for(Key k:keys){
-            insertKeyToOrder(k.getId(),orderId);
+            insertKeyToOrder(k.getId(),order);
         }
     }
 

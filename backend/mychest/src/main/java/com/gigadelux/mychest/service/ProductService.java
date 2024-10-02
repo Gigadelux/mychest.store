@@ -27,11 +27,13 @@ public class ProductService {
     @Autowired
     private BannerRepository bannerRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Product> getProductsByCategory(String category) throws ProductsByCategoryNotFoundException {
         List<Product> res = productRepository.findProductsByCategory(category);
         if(res.isEmpty()) throw new ProductsByCategoryNotFoundException();
-        categoryRepository.incrementPopularity(category);
+        Category cat = categoryRepository.findByName(category);
+        cat.setPopularity(cat.getPopularity()+1L);
+        categoryRepository.save(cat);
         return res;
     }
 
