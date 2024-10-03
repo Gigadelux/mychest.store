@@ -16,6 +16,8 @@ public class Order {
     @GeneratedValue
     private Long id;
 
+    private String postalCode;
+
     @ManyToOne
     private AppUser user;
 

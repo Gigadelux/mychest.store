@@ -1,0 +1,8 @@
+Order post/get requests from controller
+
+
+SharedPreferences structure
+{
+    cartId: ,//CartId
+    token: ,//TokenKeycloak
+}

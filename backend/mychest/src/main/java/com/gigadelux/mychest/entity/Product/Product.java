@@ -1,6 +1,7 @@
 package com.gigadelux.mychest.entity.Product;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gigadelux.mychest.entity.User.CartItem;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -29,6 +30,8 @@ public class Product {
     @OneToOne
     private CartItem cartItem;
 
+    //JsonIgnore affect only the result in the ProductController and not the business logic
+    @JsonIgnore //IT IS ABSOLUTELY NECESSARY TO PREVENT THE USER TO READ THE KEYS FROM THE SERIALIZED JSON
     @OneToMany(fetch = FetchType.EAGER,mappedBy = "product")
     private List<Key> keyList;
 

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class OrderService {
@@ -57,21 +58,23 @@ public class OrderService {
     // In questa modalità è necessario forzare manualmente l'incremento del campo di versione chiamando flush()
     // sull'EntityManager per propagare lo stato nel database. TODO rename introduction
     @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT) //rollback For -> Exceptions
-    @Transactional(readOnly = false)
-    public Order insertOrder(AppUser appUser, CreditCard creditCard) throws EmptyCartException, CartItemNotFoundException, InsufficientQuantityException, OrderNotFoundException, ProductNotFound, NoKeyFoundException, InsufficientCreditException { //TODO here all the key service methods necessary to complete the trasaction
+    @Transactional(readOnly = false) //////////////////////////////////////////////////////////                     v   -> the cartId will buy first only the cart from the frontend
+    public Order insertOrder(AppUser appUser, CreditCard creditCard, String postalCode, Long cartId) throws EmptyCartException, CartItemNotFoundException, InsufficientQuantityException, OrderNotFoundException, ProductNotFound, NoKeyFoundException, InsufficientCreditException, CreditCardNotFoundException { //TODO here all the key service methods necessary to complete the trasaction
         List<Cart> carts = cartRepository.findCartByUser(appUser);
         if(carts.isEmpty()) throw new EmptyCartException();
         float price = 0f;
         for(Cart c: carts){
-            for(CartItem i: c.getCartItem()){
-                if(!cartItemService.isQuantityAvaible(i.getId())) throw new InsufficientQuantityException();
-                price = price + (i.getProduct().getPrice()*i.getQuantity());
-            }
+            if(Objects.equals(c.getId(), cartId))
+                for(CartItem i: c.getCartItem()){
+                    if(!cartItemService.isQuantityAvaible(i.getId())) throw new InsufficientQuantityException();
+                    price = price + (i.getProduct().getPrice()*i.getQuantity());
+                }
         }
-        if(!creditCardService.hasCredit(price))throw new InsufficientCreditException();
+        if(!creditCardService.hasCredit(appUser,price))throw new InsufficientCreditException();
         Order o = new Order();
         o.setCreditCard(creditCard);
         o.setUser(appUser);
+        o.setPostalCode(postalCode);
         orderRepository.save(o);
         for(Cart c: carts){
             for(CartItem i: c.getCartItem()){

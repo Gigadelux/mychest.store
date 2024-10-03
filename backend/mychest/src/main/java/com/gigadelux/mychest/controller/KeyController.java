@@ -26,5 +26,8 @@ public class KeyController {
         Key keyAdded = keyService.addKey(activationKey, productId);
         return ResponseEntity.ok("Key added: %s".formatted(keyAdded.toString()));
     }
+
+    //@PreAuthorize("hasAnyAuthority('admin')")
+    //@PostMapping("/deleteKey")
 }
 

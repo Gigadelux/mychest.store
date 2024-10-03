@@ -3,6 +3,7 @@ package com.gigadelux.mychest.service;
 import com.gigadelux.mychest.entity.User.Cart;
 import com.gigadelux.mychest.entity.User.CartItem;
 import com.gigadelux.mychest.exception.CartItemNotFoundException;
+import com.gigadelux.mychest.exception.InsufficientQuantityException;
 import com.gigadelux.mychest.repository.CartItemRepository;
 import com.gigadelux.mychest.repository.CartRepository;
 import jakarta.transaction.Transactional;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CartItemService {
@@ -28,15 +30,26 @@ public class CartItemService {
     }
 
     @Transactional
-    void addToCart(CartItem cartItem, Cart cart){
+    void addToCart(CartItem cartItem, Cart cart) throws CartItemNotFoundException, InsufficientQuantityException {
         List<CartItem> cartItems = cart.getCartItem();
         if (cartItems == null) {
             cartItems = new ArrayList<>();
         }
-        cartItems.add(cartItem);
-        cartItems.add(cartItem);
+        boolean found = false;
+        for(CartItem c:cartItems){
+            if (Objects.equals(c.getProduct().getId(), cartItem.getProduct().getId())) {
+                found = true;
+                if(!isQuantityAvaible(cartItem.getId())) throw new InsufficientQuantityException();
+                c.setQuantity(c.getQuantity()+1);
+                cartItemRepository.save(c);
+                break;
+            }
+        }
+        if(!found) {
+            cartItems.add(cartItem);
+            cartItemRepository.save(cartItem);
+        }
         cart.setCartItem(cartItems);
-        cartItemRepository.save(cartItem);
         cartRepository.save(cart);
     }
 }

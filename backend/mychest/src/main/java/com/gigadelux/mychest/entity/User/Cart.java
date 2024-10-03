@@ -18,6 +18,4 @@ public class Cart {
 
     @OneToMany
     private List<CartItem> cartItem;
-
-    private String postal_code;
 }

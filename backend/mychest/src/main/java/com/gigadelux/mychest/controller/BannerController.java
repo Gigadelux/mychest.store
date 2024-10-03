@@ -23,4 +23,6 @@ public class BannerController {
             return new ResponseEntity("Error banner not found", HttpStatus.NOT_FOUND);
         }
     }
+
+
 }
