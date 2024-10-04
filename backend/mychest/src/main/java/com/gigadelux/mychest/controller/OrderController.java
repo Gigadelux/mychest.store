@@ -7,9 +7,13 @@ import com.gigadelux.mychest.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import java.util.List;
 
 @Controller
 @RequestMapping("/orders")
@@ -48,6 +52,14 @@ public class OrderController {
         }
     }
 
-    //@PreAuthorize("hasAnyAuthority('clientUser')")
-    //@GetMapping("/getOrders")
+    @PreAuthorize("hasAnyAuthority('clientUser')")
+    @GetMapping("/getOrders")
+    ResponseEntity getOrders(@RequestParam String email){
+        try {
+            List<Order> orders = orderService.getAllOrdersByUser(email);
+            return ResponseEntity.ok(orders);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
+    }
 }

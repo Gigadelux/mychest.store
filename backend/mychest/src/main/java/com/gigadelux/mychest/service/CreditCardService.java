@@ -25,9 +25,9 @@ public class CreditCardService {
     }
 
     @Transactional
-    public void setCreditCard(Long userId, CreditCard creditCard) throws UserNotFoundException {
-        if(!appUserRepository.existsById(userId)) throw new UserNotFoundException();
-        AppUser user = appUserRepository.getReferenceById(userId);
+    public CreditCard setCreditCard(String email, CreditCard creditCard) throws UserNotFoundException {
+        if(!appUserRepository.existsByEmail(email)) throw new UserNotFoundException();
+        AppUser user = appUserRepository.findAppUserByEmail(email);
         if(creditCardRepository.existsByUser(user)){
             CreditCard toDelete = creditCardRepository.findByUser(user);
             creditCardRepository.deleteById(toDelete.getId());
@@ -37,6 +37,13 @@ public class CreditCardService {
         c.setExpire_time(creditCard.getExpire_time());
         c.setPass_code(creditCard.getPass_code());
         c.setUser(user);
-        creditCardRepository.save(c);
+        return creditCardRepository.save(c);
+    }
+
+    public CreditCard getCreditCardByUser(String email) throws UserNotFoundException, CreditCardNotFoundException{
+            if(!appUserRepository.existsByEmail(email)) throw new UserNotFoundException();
+            AppUser appUser = appUserRepository.findAppUserByEmail(email);
+            if(!creditCardRepository.existsByUser(appUser)) throw new CreditCardNotFoundException();
+            return creditCardRepository.findByUser(appUser);
     }
 }

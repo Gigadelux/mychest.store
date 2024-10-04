@@ -1,7 +1,10 @@
 package com.gigadelux.mychest.controller;
 
 import com.gigadelux.mychest.entity.User.AppUser;
+import com.gigadelux.mychest.exception.EmailAlreadyExistsException;
+import com.gigadelux.mychest.exception.InvalidEmailException;
 import com.gigadelux.mychest.exception.UserNotFoundException;
+import com.gigadelux.mychest.exception.WeakPasswordException;
 import com.gigadelux.mychest.service.AppUserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +22,16 @@ public class AppUserController {
 
     @PostMapping("/newUser")
     ResponseEntity newUser(@RequestBody AppUser user, String password){
-        try{
+        try {
             appUserService.addUser(user,password);
-            return ResponseEntity.ok("user Added:"+ user);
-        }catch (Exception e){ //TODO manage other exceptions
-            return new ResponseEntity("error adding user", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (EmailAlreadyExistsException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }catch (WeakPasswordException e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }catch (InvalidEmailException e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
+        return ResponseEntity.ok("user Added:"+ user);
     }
 
     @PreAuthorize("hasAnyAuthority('clientUser')")

@@ -50,9 +50,9 @@ public class OrderService {
     private EntityManager entityManager;
 
     @Transactional(readOnly = true)
-    public List<Order> getAllOrdersByUser(Long userId) throws UserNotFoundException{
-        if(!appUserRepository.existsById(userId)) throw new UserNotFoundException();
-        AppUser appUser = appUserRepository.getReferenceById(userId);
+    public List<Order> getAllOrdersByUser(String email) throws UserNotFoundException{
+        if(!appUserRepository.existsByEmail(email)) throw new UserNotFoundException();
+        AppUser appUser = appUserRepository.findAppUserByEmail(email);
         return appUser.getOrders();
     }
 
