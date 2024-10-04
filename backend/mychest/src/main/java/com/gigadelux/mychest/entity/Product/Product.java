@@ -27,8 +27,8 @@ public class Product {
     private int type;
     private String platforms;
 
-    @OneToOne
-    private CartItem cartItem;
+    @OneToMany
+    private List<CartItem> cartItem;
 
     //JsonIgnore affect only the result in the ProductController and not the business logic
     @JsonIgnore //IT IS ABSOLUTELY NECESSARY TO PREVENT THE USER TO READ THE KEYS FROM THE SERIALIZED JSON

@@ -33,8 +33,8 @@ public class KeycloakService {
     String passwordAdmin = "BillCypher2012!";
     String role = "clientUser";
     String serverUrl = "http://localhost:8080";
-    String realm = "mychest";
-    String clientId = "mystore";
+    String realm =  "mychest";
+    String clientId = "mychest-restapi";
     String clientSecret = "";
 
 

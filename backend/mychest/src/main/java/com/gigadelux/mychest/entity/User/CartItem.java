@@ -13,7 +13,7 @@ public class CartItem {
     @GeneratedValue
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
 

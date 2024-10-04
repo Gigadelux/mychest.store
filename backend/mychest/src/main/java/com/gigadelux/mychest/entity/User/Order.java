@@ -1,5 +1,6 @@
 package com.gigadelux.mychest.entity.User;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gigadelux.mychest.entity.Product.Key;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class Order {
     @ManyToOne
     private AppUser user;
 
+    @JsonIgnore
     @OneToOne
     private CreditCard creditCard;
 
