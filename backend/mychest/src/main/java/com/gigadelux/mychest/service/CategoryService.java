@@ -30,4 +30,8 @@ public class CategoryService {
         categoryRepository.save(cat);
         return cat;
     }
+
+    public List<Category> getMostPopular(int limit){
+        return categoryRepository.mostPopular(limit);
+    }
 }

@@ -32,8 +32,11 @@ public class CategoryController {
         return ResponseEntity.ok(res);
     }
 
-    //@PreAuthorize("hasAnyAuthority('cliente')")
+    //@PreAuthorize("hasAnyAuthority('admin')")
     //@PostMapping("/removeCategory")
 
-    //@GetMapping("/mostPopular")
+    @GetMapping("/mostPopular")
+    ResponseEntity getMostPopular(@RequestParam int limit){
+        return ResponseEntity.ok(categoryService.getMostPopular(limit));
+    }
 }

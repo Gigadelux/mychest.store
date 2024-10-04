@@ -4,11 +4,10 @@ import 'package:mychest/data/models/product.dart';
 class Profile{
   String email;
   CreditCard creditCard;
-  Map<String, List<Product>> chests;
-  Profile(this.email, this.creditCard, this.chests);
+  Profile(this.email, this.creditCard);
 
-  factory Profile.empty() => Profile("", CreditCard.empty(), {});
+  factory Profile.empty() => Profile("", CreditCard.empty());
   bool isEmpty() {
-    return email.isEmpty && creditCard.isEmpty && chests.isEmpty;
+    return email.isEmpty && creditCard.isEmpty;
   }
 }

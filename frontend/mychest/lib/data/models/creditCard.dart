@@ -1,7 +1,7 @@
 class CreditCard{
-  int postalCode;
+  String postalCode;
   String cardNumber;
-  int passCode;
+  String passCode;
   String expireTime;
   CreditCard({
     required this.postalCode,
@@ -9,18 +9,18 @@ class CreditCard{
     required this.passCode,
     required this.expireTime,
   });
-  factory CreditCard.empty() => CreditCard(postalCode: 0, cardNumber: "", passCode: 0, expireTime: "");
+  factory CreditCard.empty() => CreditCard(postalCode: "", cardNumber: "", passCode: "", expireTime: "");
   bool get isEmpty {
-    return postalCode == 0 &&
+    return postalCode.isEmpty &&
            cardNumber.isEmpty &&
-           passCode == 0 &&
+           passCode.isEmpty &&
            expireTime.isEmpty;
   }
   factory CreditCard.fromJson(Map<String, dynamic> json) {
     return CreditCard(
-      postalCode: json['postalCode'] as int,
+      postalCode: json['postalCode'] as String,
       cardNumber: json['cardNumber'] as String,
-      passCode: json['passCode'] as int,
+      passCode: json['passCode'] as String,
       expireTime: json['expireTime'] as String,
     );
   }

@@ -2,6 +2,7 @@ package com.gigadelux.mychest.controller;
 
 import com.gigadelux.mychest.entity.Product.Category;
 import com.gigadelux.mychest.entity.Product.Product;
+import com.gigadelux.mychest.exception.BannerNullException;
 import com.gigadelux.mychest.exception.CategoryDoesNotExistException;
 import com.gigadelux.mychest.exception.ProductNotFound;
 import com.gigadelux.mychest.exception.ProductsByCategoryNotFoundException;
@@ -35,6 +36,12 @@ public class ProductController {
             return new ResponseEntity("Category not found", HttpStatus.NOT_FOUND);
         } catch (ProductsByCategoryNotFoundException e) {
             return new ResponseEntity("No products are in this category", HttpStatus.NOT_FOUND);
+        } catch (BannerNullException e) {
+            return new ResponseEntity(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            /*
+            * The best HTTP status to throw in this case is `HttpStatus.INTERNAL_SERVER_ERROR (500)`
+            * since it's an unexpected server-side issue where the singleton entity wasn't instantiated as expected
+            * */
         }
         return ResponseEntity.ok(products);
     }

@@ -2,6 +2,7 @@ package com.gigadelux.mychest.service;
 
 import com.gigadelux.mychest.entity.Product.Category;
 import com.gigadelux.mychest.entity.Product.Product;
+import com.gigadelux.mychest.exception.BannerNullException;
 import com.gigadelux.mychest.exception.CategoryDoesNotExistException;
 import com.gigadelux.mychest.exception.ProductNotFound;
 import com.gigadelux.mychest.exception.ProductsByCategoryNotFoundException;
@@ -67,7 +68,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> getFeatured() throws CategoryDoesNotExistException, ProductsByCategoryNotFoundException{
+    public List<Product> getFeatured() throws CategoryDoesNotExistException, ProductsByCategoryNotFoundException, BannerNullException {
+        if(!bannerRepository.existsById(1L)) throw new BannerNullException();
         Category bannerCat = bannerRepository.findFirstBy();
         if(!categoryRepository.existsById(bannerCat.getId())) throw new CategoryDoesNotExistException();
         return getProductsByCategory(bannerCat.getName());

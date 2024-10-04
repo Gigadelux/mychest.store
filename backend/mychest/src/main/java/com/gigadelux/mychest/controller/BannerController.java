@@ -1,13 +1,14 @@
 package com.gigadelux.mychest.controller;
 
 import com.gigadelux.mychest.entity.Banner;
+import com.gigadelux.mychest.exception.CategoryDoesNotExistException;
 import com.gigadelux.mychest.exception.NoBannerException;
 import com.gigadelux.mychest.service.BannerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/banner")
 public class BannerController {
@@ -24,5 +25,15 @@ public class BannerController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('admin')")
+    @PostMapping("/set")
+    ResponseEntity set(@RequestBody String image, @RequestParam String category){
+        try{
+            bannerService.setBanner(image,category);
+            return ResponseEntity.ok("Banner set: "+image+category);
+        }catch (CategoryDoesNotExistException e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

@@ -11,7 +11,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> { //TODO THIS IS ONLY FOR DEMO, REDO WHEN STATEMANAGER IS ACTIVE (riverpod)
-  List<String> chests = ["Favourite skins", "Gta V"];
+
   @override
   Widget build(BuildContext context) {
     return Drawer(

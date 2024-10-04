@@ -44,6 +44,9 @@ public class OrderService {
     CreditCardService creditCardService;
 
     @Autowired
+    CreditCardRepository creditCardRepository;
+
+    @Autowired
     private EntityManager entityManager;
 
     @Transactional(readOnly = true)
@@ -59,17 +62,26 @@ public class OrderService {
     // sull'EntityManager per propagare lo stato nel database. TODO rename introduction
     @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT) //rollback For -> Exceptions
     @Transactional(readOnly = false) //////////////////////////////////////////////////////////                     v   -> the cartId will buy first only the cart from the frontend
-    public Order insertOrder(AppUser appUser, CreditCard creditCard, String postalCode, Long cartId) throws EmptyCartException, CartItemNotFoundException, InsufficientQuantityException, OrderNotFoundException, ProductNotFound, NoKeyFoundException, InsufficientCreditException, CreditCardNotFoundException { //TODO here all the key service methods necessary to complete the trasaction
+    public Order insertOrder(String email, String postalCode, Long cartId) throws EmptyCartException, CartItemNotFoundException, InsufficientQuantityException, OrderNotFoundException, ProductNotFound, NoKeyFoundException, InsufficientCreditException, CreditCardNotFoundException, UserNotFoundException, UserNotOfCartException { //TODO here all the key service methods necessary to complete the trasaction
+        if(!appUserRepository.existsByEmail(email)) throw new UserNotFoundException();
+        AppUser appUser = appUserRepository.findAppUserByEmail(email);
+        if(!creditCardRepository.existsByUser(appUser)) throw new CreditCardNotFoundException();
+        CreditCard creditCard = creditCardRepository.findByUser(appUser);
         List<Cart> carts = cartRepository.findCartByUser(appUser);
+        boolean found = false;
         if(carts.isEmpty()) throw new EmptyCartException();
         float price = 0f;
         for(Cart c: carts){
-            if(Objects.equals(c.getId(), cartId))
-                for(CartItem i: c.getCartItem()){
-                    if(!cartItemService.isQuantityAvaible(i.getId())) throw new InsufficientQuantityException();
-                    price = price + (i.getProduct().getPrice()*i.getQuantity());
+            if(c.getCartItem().isEmpty()) throw new EmptyCartException();
+            if(Objects.equals(c.getId(), cartId)) {
+                for (CartItem i : c.getCartItem()) {
+                    if (!cartItemService.isQuantityAvaible(i.getId())) throw new InsufficientQuantityException();
+                    price = price + (i.getProduct().getPrice() * i.getQuantity());
                 }
+                found = true;
+            }
         }
+        if(!found) throw new UserNotOfCartException();
         if(!creditCardService.hasCredit(appUser,price))throw new InsufficientCreditException();
         Order o = new Order();
         o.setCreditCard(creditCard);
