@@ -30,8 +30,10 @@ public class SecurityConfiguration {
                         //.requestMatchers("/user/addUser").permitAll()
                         .requestMatchers("/products/tutti").permitAll()
                         .requestMatchers("/products/mostra").permitAll()
+                        .requestMatchers("/admin/name").permitAll()
                         .requestMatchers("/category/getAll").permitAll()
                        // .requestMatchers("/utente/inserisciutente").permitAll()
+                        .requestMatchers("/banner/set").hasRole("admin")
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

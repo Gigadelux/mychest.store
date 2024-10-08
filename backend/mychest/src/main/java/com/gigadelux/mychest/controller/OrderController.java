@@ -50,7 +50,7 @@ public class OrderController {
         }
     }
 
-    @PreAuthorize("hasAnyAuthority('clientUser')")
+    @PreAuthorize("hasRole('ROLE_clientUser')")
     @GetMapping("/getOrders")
     ResponseEntity getOrders(@RequestParam String email){
         try {

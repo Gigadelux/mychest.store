@@ -26,7 +26,7 @@ public class BannerController {
         }
     }
 
-    @PreAuthorize("hasAnyAuthority('admin')")
+    @PreAuthorize("hasRole('admin')")
     @PostMapping("/set")
     ResponseEntity set(@RequestBody String image, @RequestParam String category){
         try{

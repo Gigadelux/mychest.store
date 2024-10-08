@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
-    private static String CLIENT_NAME = "mystore";
+    private static String CLIENT_NAME = "mychest-restapi";
 
     @SuppressWarnings("unchecked")
     public AbstractAuthenticationToken convert(final Jwt source) {

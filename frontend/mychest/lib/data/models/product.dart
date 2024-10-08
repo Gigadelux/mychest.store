@@ -4,11 +4,11 @@ class Product {
   String name;
   String description;
   String image;
-  double price;
   int quantity;
+  double price;
   int type;
-  List<String> categories;
-  String? activationKey;
+  String platforms;
+  String category;
   Product({
     required this.id,
     required this.name,
@@ -17,8 +17,8 @@ class Product {
     required this.price,
     required this.quantity,
     required this.type,
-    required this.categories,
-    this.activationKey
+    required this.platforms,
+    required this.category
   });
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
@@ -29,8 +29,8 @@ class Product {
       price: json['price'].toDouble(),
       quantity: json['quantity'],
       type: json['type'],
-      categories: json['categories'],
-      activationKey: json['activationKey'],
+      platforms: json['platforms'],
+      category: json['category']
     );
   }
   
