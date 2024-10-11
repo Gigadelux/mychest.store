@@ -15,7 +15,7 @@ class AppUserAPI {
         'username': username,
         'password': password,
         'grant_type': 'password',
-        'client_id': 'mystore',
+        'client_id': 'mystore'
       },
     );
 
