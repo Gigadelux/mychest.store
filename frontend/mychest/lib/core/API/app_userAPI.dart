@@ -38,12 +38,15 @@ class AppUserAPI {
     }
   }
 
-  Future<Map<String, dynamic>> getProfile() async {
+  Future<Map<String, dynamic>> getProfile(String email) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('loginToken');
 
     final response = await http.get(
       Uri.parse(getMyProfile),
+      params: {
+        'email': email,
+      },
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -52,10 +55,11 @@ class AppUserAPI {
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
       await prefs.setString('email', jsonResponse['email']);
-
       return {
         'status': 'success',
-        'email': jsonResponse['email']
+        'email': jsonResponse['email'],
+        'credit_card': jsonResponse['credit_card'],
+        'orders': jsonResponse['orders']
       };
     } else {
       return {
