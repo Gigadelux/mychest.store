@@ -46,7 +46,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/searchProductsByCategory")
+    @GetMapping("/searchByCategory")
     public ResponseEntity searchProductsByCategory(@RequestParam String category){
         List<Product> res = null;
         try {
@@ -57,7 +57,7 @@ public class ProductController {
         return ResponseEntity.ok(res);
     }
 
-    @GetMapping("/searchProducts")
+    @GetMapping("/search")
     public ResponseEntity searchProducts(@RequestParam String name){
         List<Product> res = productService.searchProducts(name);
         return ResponseEntity.ok(res);

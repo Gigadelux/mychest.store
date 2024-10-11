@@ -28,7 +28,7 @@ public class CartController {
     @PostMapping("/addItem")
     ResponseEntity addItem(@RequestParam Long cartId, @RequestParam String email, @RequestParam String productName, @RequestParam int quantity) {
         try {
-            cartService.addToCart(cartId, email, productName, quantity);
+            return ResponseEntity.ok(cartService.addToCart(cartId, email, productName, quantity));
         } catch (ProductNotFound e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (CartNotFoundException ex) {
@@ -38,13 +38,12 @@ public class CartController {
         }catch (UserNotOfCartException exc){
                 return new ResponseEntity(exc.getMessage(), HttpStatus.UNAUTHORIZED);
             }
-        return new ResponseEntity("",HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("/removeItem")
     ResponseEntity removeItem(@RequestParam Long cartId, @RequestParam String email, @RequestParam String productName, @RequestParam int quantity) {
         try {
-            cartService.removeItemFrom(cartId, email, productName);
+            return ResponseEntity.ok(cartService.removeItemFrom(cartId, email, productName));
         } catch (ProductNotFound e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (CartNotFoundException ex) {
@@ -56,6 +55,7 @@ public class CartController {
         } catch (CartItemNotInCartException e) {
             return new ResponseEntity(e.getMessage(),HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity("",HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    //GET CART!!!!!!!!!!!!
 }

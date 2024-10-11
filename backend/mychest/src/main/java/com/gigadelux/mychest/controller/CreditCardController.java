@@ -18,7 +18,7 @@ public class CreditCardController {
     CreditCardService creditCardService;
 
     @PreAuthorize("hasAnyAuthority('clientUser')")
-    @GetMapping("/getFromUser")
+    @GetMapping("/getFrom")
     public ResponseEntity getFromUser(@RequestParam String email){
         try {
             CreditCard c = creditCardService.getCreditCardByUser(email);
@@ -31,7 +31,7 @@ public class CreditCardController {
     }
 
     @PreAuthorize("hasAnyAuthority('clientUser')")
-    @PostMapping("/setCreditCardOfUser")
+    @PostMapping("/setTo")
     public ResponseEntity setCreditCardOfUser(@RequestParam String email, @RequestBody CreditCard creditCard){
         try {
             CreditCard c = creditCardService.setCreditCard(email, creditCard);
