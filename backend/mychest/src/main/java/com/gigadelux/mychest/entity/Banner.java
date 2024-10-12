@@ -16,6 +16,7 @@ public class Banner {
     @Column(unique = true)
     private String image;
 
-    @OneToOne(mappedBy = "banner")
+    @OneToOne
+    @JoinColumn(name = "category_id")
     private Category category;
 }

@@ -33,5 +33,7 @@ class Product {
       category: json['category']
     );
   }
-  
+  static List<Product> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((json) => Product.fromJson(json)).toList();
+  }
 }

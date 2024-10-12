@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:mychest/data/models/CartItem.dart';
 
 class Cart {

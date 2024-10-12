@@ -3,8 +3,8 @@ import 'package:mychest/data/models/product.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 
 class Universalproductgrid extends StatefulWidget {
-  List<Product> products;
-  Universalproductgrid({super.key, required this.products});
+  final List<Product> products;
+  const Universalproductgrid({super.key, required this.products});
 
   @override
   State<Universalproductgrid> createState() => _UniversalproductgridState();

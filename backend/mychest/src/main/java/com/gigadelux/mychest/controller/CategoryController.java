@@ -17,7 +17,7 @@ public class CategoryController {
     CategoryService categoryService;
 
 
-    @PreAuthorize("hasAnyAuthority('admin')")
+    @PreAuthorize("hasRole('admin')")
     @PostMapping("/addCategory")
     ResponseEntity addCategory(@RequestParam String category){
         Category catAdded = categoryService.addCategory(category);

@@ -11,13 +11,14 @@ class ProductsAPI {
 
     if (response.statusCode == 200) {
       return {
-        'status': 'success',
+        'status': response.statusCode,
         'featuredProducts': json.decode(response.body)
       };
     } else {
       return {
-        'status': 'error',
+        'status': response.statusCode,
         'message': 'Failed to fetch featured products',
+        'description': json.decode(response.body)['message'],
         'error': json.decode(response.body)
       };
     }
@@ -28,13 +29,14 @@ class ProductsAPI {
 
     if (response.statusCode == 200) {
       return {
-        'status': 'success',
+        'status': response.statusCode,
         'products': json.decode(response.body)
       };
     } else {
       return {
-        'status': 'error',
+        'status': response.statusCode,
         'message': 'Failed to search products by category',
+        'description': json.decode(response.body)['message'],
         'error': json.decode(response.body)
       };
     }
@@ -45,17 +47,16 @@ class ProductsAPI {
 
     if (response.statusCode == 200) {
       return {
-        'status': 'success',
+        'status': response.statusCode,
         'products': json.decode(response.body)
       };
     } else {
       return {
-        'status': 'error',
+        'status': response.statusCode,
         'message': 'Failed to search products',
+        'description': json.decode(response.body)['message'],
         'error': json.decode(response.body)
       };
     }
   }
 }
-
-//TODO complete with body and params

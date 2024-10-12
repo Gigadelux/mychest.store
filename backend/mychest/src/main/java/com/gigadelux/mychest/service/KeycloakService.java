@@ -87,6 +87,7 @@ public class KeycloakService {
         UserRepresentation user = new UserRepresentation();
 
         user.setEnabled(true);
+        user.setUsername(userToAdd.getEmail());
         user.setEmail(userToAdd.getEmail());
         user.setEmailVerified(true);
 

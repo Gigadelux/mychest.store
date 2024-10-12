@@ -28,7 +28,7 @@ public class BannerController {
 
     @PreAuthorize("hasRole('admin')")
     @PostMapping("/set")
-    ResponseEntity set(@RequestBody String image, @RequestParam String category){
+        ResponseEntity set(@RequestParam String image, @RequestParam String category){
         try{
             bannerService.setBanner(image,category);
             return ResponseEntity.ok("Banner set: "+image+category);

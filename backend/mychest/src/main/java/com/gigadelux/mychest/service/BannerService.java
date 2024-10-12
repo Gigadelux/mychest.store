@@ -28,6 +28,7 @@ public class BannerService {
             bannerRepository.deleteById(1L);
         Banner b = new Banner();
         b.setImage(image);
+        b.setCategory(categoryRepository.findByName(category));
         bannerRepository.save(b);
         return b;
     }

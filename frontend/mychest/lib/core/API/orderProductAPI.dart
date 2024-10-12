@@ -13,13 +13,15 @@ class OrderAPI {
 
     if (response.statusCode == 200) {
       return {
-        'status': 'success',
+        'status': response.statusCode,
+        'order': json.decode(response.body),
         'message': 'Order paid successfully',
       };
     } else {
       return {
-        'status': 'error',
-        'message': 'Failed to pay for the order',
+        'status': response.statusCode,
+        'message': 'Failed to pay for the order ${json.decode(response.body)['message']}',
+        'description': json.decode(response.body)['message'],
         'error': json.decode(response.body)
       };
     }
@@ -30,13 +32,14 @@ class OrderAPI {
 
     if (response.statusCode == 200) {
       return {
-        'status': 'success',
+        'status': response.statusCode,
         'orders': json.decode(response.body)
       };
     } else {
       return {
-        'status': 'error',
+        'status': response.statusCode,
         'message': 'Failed to fetch orders',
+        'description': json.decode(response.body)['message'],
         'error': json.decode(response.body)
       };
     }

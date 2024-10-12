@@ -21,7 +21,7 @@ public class KeyController {
     KeyService keyService;
 
 
-    @PreAuthorize("hasAnyAuthority('admin')")
+    @PreAuthorize("hasRole('admin')")
     @PostMapping("/addKey")
     ResponseEntity addCategory(@RequestParam String activationKey, Long productId){
         Key keyAdded = keyService.addKey(activationKey, productId);

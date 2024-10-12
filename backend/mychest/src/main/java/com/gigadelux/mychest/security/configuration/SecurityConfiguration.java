@@ -1,6 +1,7 @@
 package com.gigadelux.mychest.security.configuration;
 
 
+import com.gigadelux.mychest.security.Auth.KeycloakAuthConverter;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.context.annotation.Bean;
@@ -28,16 +29,17 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         //.requestMatchers("/user/addUser").permitAll()
-                        .requestMatchers("/products/tutti").permitAll()
-                        .requestMatchers("/products/mostra").permitAll()
-                        .requestMatchers("/admin/name").permitAll()
-                        .requestMatchers("/category/getAll").permitAll()
+                        .requestMatchers("/products/featured").permitAll()
+                        .requestMatchers("/products/search").permitAll()
+                        .requestMatchers("/products/searchByCategory").permitAll()
+                        .requestMatchers("/banner/get").permitAll()
+                       .requestMatchers("/category/getAll").permitAll()
                        // .requestMatchers("/utente/inserisciutente").permitAll()
-                        .requestMatchers("/banner/set").hasRole("admin")
+                        // .requestMatchers("/banner/set").hasRole("admin")
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(new JwtAuthenticationConverter()))
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(new KeycloakAuthConverter()))
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

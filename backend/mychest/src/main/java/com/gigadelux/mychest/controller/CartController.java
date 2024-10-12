@@ -41,7 +41,7 @@ public class CartController {
     }
 
     @PostMapping("/removeItem")
-    ResponseEntity removeItem(@RequestParam Long cartId, @RequestParam String email, @RequestParam String productName, @RequestParam int quantity) {
+    ResponseEntity removeItem(@RequestParam Long cartId, @RequestParam String email, @RequestParam String productName) {
         try {
             return ResponseEntity.ok(cartService.removeItemFrom(cartId, email, productName));
         } catch (ProductNotFound e) {

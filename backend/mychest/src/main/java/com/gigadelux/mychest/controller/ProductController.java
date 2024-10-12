@@ -63,7 +63,7 @@ public class ProductController {
         return ResponseEntity.ok(res);
     }
 
-    @PreAuthorize("hasAnyAuthority('admin')")
+    @PreAuthorize("hasRole('admin')")
     @PostMapping("/addProduct")
     public ResponseEntity addProduct(
             @RequestParam String name,
@@ -81,7 +81,7 @@ public class ProductController {
         return new ResponseEntity("Product save successful",HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('admin')")
+    @PreAuthorize("hasRole('admin')")
     @PostMapping("/removeProduct")
     public ResponseEntity removeProduct(@RequestParam Long id){
         Product res = null;
@@ -93,7 +93,7 @@ public class ProductController {
         return ResponseEntity.ok(res);
     }
 
-    @PreAuthorize("hasAnyAuthority('admin')")
+    @PreAuthorize("hasRole('admin')")
     @PostMapping("/editProduct")
     public ResponseEntity editProduct(
             @RequestParam Long id,

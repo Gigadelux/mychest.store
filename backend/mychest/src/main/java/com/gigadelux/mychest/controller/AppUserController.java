@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +37,7 @@ public class AppUserController {
         return ResponseEntity.ok("user Added:"+ user);
     }
 
-    @PreAuthorize("hasAnyAuthority('clientUser')")
+    @PreAuthorize("hasRole('clientUser')")
     @GetMapping("/getProfile")
     ResponseEntity getProfile(@RequestParam String email){
             try{
@@ -42,6 +45,19 @@ public class AppUserController {
             }catch (UserNotFoundException e){
                 return new ResponseEntity("error: user not found", HttpStatus.NOT_FOUND);
             }
+    }
+    @GetMapping("/validateToken")
+    public ResponseEntity<String> validateToken(@RequestHeader("Authorization") String token) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return new ResponseEntity<>("Invalid or expired token", HttpStatus.UNAUTHORIZED);
+            }
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            return ResponseEntity.ok("Token is valid. User: " + jwt.getSubject());
+        } catch (Exception e) {
+            return new ResponseEntity<>("Invalid token", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     //@PreAuthorize("hasAnyAuthority('clientUser')")

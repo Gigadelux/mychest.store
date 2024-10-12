@@ -17,7 +17,7 @@ public class CreditCardController {
     @Autowired
     CreditCardService creditCardService;
 
-    @PreAuthorize("hasAnyAuthority('clientUser')")
+    @PreAuthorize("hasRole('clientUser')")
     @GetMapping("/getFrom")
     public ResponseEntity getFromUser(@RequestParam String email){
         try {
@@ -30,7 +30,7 @@ public class CreditCardController {
         }
     }
 
-    @PreAuthorize("hasAnyAuthority('clientUser')")
+    @PreAuthorize("hasRole('clientUser')")
     @PostMapping("/setTo")
     public ResponseEntity setCreditCardOfUser(@RequestParam String email, @RequestBody CreditCard creditCard){
         try {
