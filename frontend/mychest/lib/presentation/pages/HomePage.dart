@@ -1,13 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mychest/data/models/profile.dart';
 import 'package:mychest/global/colors/colorsScheme.dart';
+import 'package:mychest/presentation/pages/subpages/cartPage.dart';
 import 'package:mychest/presentation/pages/subpages/discover.dart';
 import 'package:mychest/presentation/pages/profile/loginPage.dart';
 import 'package:mychest/presentation/pages/profile/profilePage.dart';
+import 'package:mychest/presentation/pages/subpages/search.dart';
 import 'package:mychest/presentation/state_manager/providers/appProviders.dart';
 import 'package:unicons/unicons.dart';
 import 'package:scaffold_responsive/scaffold_responsive.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -28,7 +32,7 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async{
-      //await ref.read(ProfileNotifierProvider.notifier).initialize();
+      await ref.read(ProfileNotifierProvider.notifier).initialize();
     });
     _focusNode.addListener(() {
       setState(() {
@@ -46,8 +50,12 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     bool isMobile = mediaQuery.size.width < 600;
+    Profile profile = ref.watch(ProfileNotifierProvider);
     return Scaffold(
-      endDrawer: const ProfilePage(),
+      endDrawer: ProfilePage(
+        profile: profile,
+        logoutFunction: (){},
+      ),
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       backgroundColor: pageBackground,
@@ -63,15 +71,12 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IconButton(onPressed: (){}, icon: const Icon(Icons.image_search_rounded, color: Colors.white, size: 30,)),
-            const SizedBox(width:10),
             Container(
               width: isMobile?MediaQuery.of(context).size.width/2: MediaQuery.of(context).size.width/3,
               height: 35,
               decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 40, 40, 40),
                 borderRadius: BorderRadius.circular(10),
-            
               ),
               child: Center(
                 child: TextField(
@@ -97,9 +102,7 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
                     floatingLabelBehavior: FloatingLabelBehavior.never,
                     isDense: true,
                     alignLabelWithHint: true,
-                    
                   ),
-                             
                 ),
               ),
             ),
@@ -108,10 +111,18 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
         actions: [
           Padding(
             padding:isMobile?const EdgeInsets.all(0): const EdgeInsets.all(20),
-            child: IconButton(onPressed: (){}, icon: const Icon(UniconsLine.shopping_cart_alt, color: Colors.white,size: 30,))),
+              child: IconButton(onPressed: (){
+                if(ref.watch(TokenNotifierProvider) == null){
+                  Fluttertoast.showToast(msg: "You need to login first🥺", toastLength: Toast.LENGTH_SHORT);
+                }else{
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const Cartpage()));
+                }
+              }, 
+              icon: const Icon(UniconsLine.shopping_cart_alt, color: Colors.white,size: 30,),
+            )),
           TextButton(
             onPressed: (){
-              if(!ref.watch(ProfileNotifierProvider).isEmpty()) {
+              if(!profile.isEmpty()) {
                 _scaffoldKey.currentState!.openEndDrawer();
               } else {
                 Navigator.push(context, CupertinoPageRoute(builder: (context)=>const Login()));
@@ -132,14 +143,14 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
                 ),
                 Center(
                   child: Container(
-                  width: 35,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: pageBackground
+                    width: 35,
+                    height: 35,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: pageBackground
+                    ),
+                    child: const Icon(UniconsLine.user, size: 30, color: Colors.white,),
                   ),
-                  child: const Icon(UniconsLine.user, size: 30, color: Colors.white,),
-                              ),
                 ),
               ],
             ),
@@ -163,7 +174,7 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
               ]),
         backgroundColor: pageBackground,
       ),
-      body: const DiscoverPage(),
+      body:textEditingController.text.isEmpty? const DiscoverPage(): SearchPage(toSearch: textEditingController.text),
     );
   }
 }

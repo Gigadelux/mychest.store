@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mychest/data/models/product.dart';
+import 'package:mychest/presentation/widgets/productWidget.dart';
 import 'package:responsive_grid_list/responsive_grid_list.dart';
 
-class Universalproductgrid extends StatefulWidget {
+class Universalproductgrid extends StatelessWidget {
   final List<Product> products;
   const Universalproductgrid({super.key, required this.products});
 
-  @override
-  State<Universalproductgrid> createState() => _UniversalproductgridState();
-}
-
-class _UniversalproductgridState extends State<Universalproductgrid> {
   @override
   Widget build(BuildContext context) {
     return ResponsiveGridList(
@@ -22,9 +18,7 @@ class _UniversalproductgridState extends State<Universalproductgrid> {
     minItemsPerRow: 2, // The minimum items to show in a single row. Takes precedence over minItemWidth
     maxItemsPerRow: 5, // The maximum items to show in a single row. Can be useful on large screens
     listViewBuilderOptions: ListViewBuilderOptions(), // Options that are getting passed to the ListView.builder() function
-    children: const [
-
-    ], // The list of widgets in the list
+    children: List.generate(products.length, (index)=>Productwidget(height: 150, width: 200, product: products[index])), // The list of widgets in the list
 );
   }
 }

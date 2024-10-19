@@ -56,10 +56,10 @@ public class OrderService {
         return appUser.getOrders();
     }
 
-    //OPTIMISTIC_FORCE_INCREMENT: quando si vuole avere un controllo più rigoroso sulla versione delle entità
-    // e propagare gli incrementi di versione in modo esplicito, anche a entità non modificate direttamente.
-    // In questa modalità è necessario forzare manualmente l'incremento del campo di versione chiamando flush()
-    // sull'EntityManager per propagare lo stato nel database. TODO rename introduction
+    //OPTIMISTIC_FORCE_INCREMENT: When you want stricter control over the versioning of entities
+    // and explicitly propagate version increments, even to entities that haven't been directly modified.
+    // In this mode, it's necessary to manually force the increment of the version field by calling flush()
+    // on the EntityManager to ensure the state is persisted to the database.
     @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT) //rollback For -> Exceptions
     @Transactional(readOnly = false) //////////////////////////////////////////////////////////                     v   -> the cartId will buy first only the cart from the frontend
     public Order insertOrder(String email, String postalCode, Long cartId) throws EmptyCartException, CartItemNotFoundException, InsufficientQuantityException, OrderNotFoundException, ProductNotFound, NoKeyFoundException, InsufficientCreditException, CreditCardNotFoundException, UserNotFoundException, UserNotOfCartException { //TODO here all the key service methods necessary to complete the trasaction

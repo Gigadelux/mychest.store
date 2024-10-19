@@ -37,6 +37,7 @@ public class CreditCardService {
         c.setExpire_time(creditCard.getExpire_time());
         c.setPass_code(creditCard.getPass_code());
         c.setUser(user);
+        user.setCredit_card(c);
         return creditCardRepository.save(c);
     }
 

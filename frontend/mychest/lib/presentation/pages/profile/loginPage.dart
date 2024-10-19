@@ -1,23 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mychest/core/API/app_userAPI.dart';
+import 'package:mychest/core/API/cartAPI.dart';
 import 'package:mychest/global/colors/colorsScheme.dart';
+import 'package:mychest/presentation/state_manager/providers/appProviders.dart';
 import 'package:mychest/presentation/widgets/gradientButton.dart';
 import 'package:mychest/presentation/widgets/gradientOutlineButton.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unicons/unicons.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
-class Login extends StatefulWidget {
+class Login extends ConsumerStatefulWidget {
   const Login({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  ConsumerState<Login> createState() => _LoginConsumerState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginConsumerState extends ConsumerState<Login> {
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     bool isMobile = mediaQuery.size.width < 600;
-    final TextEditingController textEditingController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
     return Scaffold(
       backgroundColor: pageBackground,
       body: Column(
@@ -75,7 +83,7 @@ class _LoginState extends State<Login> {
                         autofocus: false,
                         minLines: 1,
                         maxLines: 1,
-                        controller: textEditingController,
+                        controller: emailController,
                         textAlignVertical: TextAlignVertical.center,
                         decoration: const InputDecoration(
                           labelText: "email",
@@ -94,20 +102,21 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 30, bottom: 30),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, bottom: 30),
                     child: SizedBox(
                       width: 300,
                       child: TextField(
                         autocorrect: true,
-                        style: TextStyle(color: Colors.white, fontFamily: "Ubuntu"),
+                        controller: passwordController,
+                        style: const TextStyle(color: Colors.white, fontFamily: "Ubuntu"),
                         cursorColor: Colors.white,
                         autofocus: false,
                         minLines: 1,
                         maxLines: 1,
                         textAlignVertical: TextAlignVertical.center,
                         obscureText: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: "password",
                           labelStyle: TextStyle(color: Color.fromARGB(255, 163, 163, 163)),
                           fillColor: Color.fromARGB(255, 40, 40, 40),
@@ -124,12 +133,65 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ),
+                  loading?
+                  const CircularProgressIndicator(color: Colors.white,):
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        GradientButton(text: "Login", onPressed: (){}, height: 50, width: 100,),
-                        GradientOutLineButton(text: "Sign up", onPressed: (){}, height: 50, width: 100)
+                        GradientButton(
+                          text: "Login", 
+                          onPressed: ()async{
+                            setState(() {
+                              loading = true;
+                            });
+                            Map res = await AppUserAPI().login(emailController.text, passwordController.text);                          
+                            Map cartRes = await CartAPI().createCart(res['token']);
+                            if(cartRes['status']!=200){
+                              Fluttertoast.showToast(msg: cartRes['message']);
+                            }
+                            if(res['status']==200){
+                              try{
+                                await ref.read(TokenNotifierProvider.notifier).setToken(res['token']);
+                                await ref.read(ProfileNotifierProvider.notifier).initialize();
+                                Navigator.pop(context);
+                              }catch(e){
+                                ref.read(TokenNotifierProvider.notifier).destroy();
+                                ref.read(ProfileNotifierProvider.notifier).destroy();
+                                Fluttertoast.showToast(msg: "Sorry unknown error🥺");
+                                return;
+                              }
+                            }else{
+                              Fluttertoast.showToast(msg: res['message']);
+                            }
+                          }, height: 50, width: 100,),
+                        GradientOutLineButton(
+                          text: "Sign up", 
+                          onPressed: ()async{
+                            Map response = await AppUserAPI().newUser(emailController.text, passwordController.text);
+                            int? cartId = response['cartId'];
+                            Map res = await AppUserAPI().login(emailController.text, passwordController.text);
+                            if(res['status']!=200 || response['status']!=200){
+                              Fluttertoast.showToast(msg: response['message']);
+                              return;
+                            }
+                            if(cartId==null){
+                              Fluttertoast.showToast(msg: response['message']);
+                              return;
+                            }
+                            final prefs = await SharedPreferences.getInstance();
+                            prefs.setInt("cartId", cartId);
+                            try{
+                                await ref.read(TokenNotifierProvider.notifier).setToken(res['token']);
+                                await ref.read(ProfileNotifierProvider.notifier).initialize();
+                                Navigator.pop(context);
+                              }catch(e){
+                                ref.read(TokenNotifierProvider.notifier).destroy();
+                                ref.read(ProfileNotifierProvider.notifier).destroy();
+                                Fluttertoast.showToast(msg: "Sorry unknown error🥺");
+                                return;
+                              }
+                          }, height: 50, width: 100)
                       ],
                     ),
                   )

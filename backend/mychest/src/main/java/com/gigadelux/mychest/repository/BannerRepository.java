@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BannerRepository extends JpaRepository<Banner,Long> {
     Category findFirstBy();
+    Banner findFirstByOrderByIdAsc();
 }

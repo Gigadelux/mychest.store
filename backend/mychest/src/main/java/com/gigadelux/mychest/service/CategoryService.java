@@ -31,6 +31,13 @@ public class CategoryService {
         return cat;
     }
 
+    public Category delete(@RequestParam String name) throws CategoryDoesNotExistException{
+        if(!categoryRepository.existsByName(name)) throw new CategoryDoesNotExistException();
+        Category cat = categoryRepository.findByName(name);
+        categoryRepository.delete(cat);
+        return cat;
+    }
+
     public List<Category> getMostPopular(int limit){
         return categoryRepository.mostPopular(limit);
     }

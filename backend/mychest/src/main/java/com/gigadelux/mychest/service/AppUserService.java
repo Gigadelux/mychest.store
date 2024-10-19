@@ -7,7 +7,13 @@ import com.gigadelux.mychest.exception.UserNotFoundException;
 import com.gigadelux.mychest.exception.WeakPasswordException;
 import com.gigadelux.mychest.repository.AppUserRepository;
 import jakarta.transaction.Transactional;
+import org.keycloak.jose.jwe.JWEException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoders;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
 
 import java.util.regex.Pattern;
@@ -52,5 +58,15 @@ public class AppUserService {
         if (!passwordPattern.matcher(password).matches()) {
             throw new WeakPasswordException("Password is too weak. It must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one digit, and one special character.");
         }
+    }
+    public String getUserEmail(String authorizationHeader) throws JwtException {
+        //decoding
+        String issuerUri = "http://localhost:8080/realms/mychest";
+        JwtDecoder decoder = JwtDecoders.fromIssuerLocation(issuerUri);
+        String token = authorizationHeader.replace("Bearer ", "");
+        Jwt jwt = decoder.decode(token);
+        //decoded
+        String email = jwt.getClaim("email");
+        return email;
     }
 }

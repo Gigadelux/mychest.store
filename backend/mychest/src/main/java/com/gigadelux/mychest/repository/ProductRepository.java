@@ -15,7 +15,4 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     boolean existsByName(String name);
 
-    //find products by category name
-    @Query("SELECT p FROM Product p WHERE p.category.name = :name")
-    List<Product> findProductsByCategory(@Param("name") String category);
 }

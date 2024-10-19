@@ -7,8 +7,14 @@ class CartAPI {
   static const String addToCart = "http://localhost:8100/cart/addItem";
   static const String removeItem = "http://localhost:8100/cart/removeItem";
 
-  Future<Map<String, dynamic>> createCart(String email) async {
-    final response = await http.post(Uri.parse('$addCart?email=$email'));
+  Future<Map<String, dynamic>> createCart(String token) async {
+    final uri = Uri.parse(addCart);
+    final response = await http.post(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
       SharedPreferences prefs = await SharedPreferences.getInstance();

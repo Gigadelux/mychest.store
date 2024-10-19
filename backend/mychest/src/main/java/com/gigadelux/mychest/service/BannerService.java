@@ -1,6 +1,8 @@
 package com.gigadelux.mychest.service;
 
 import com.gigadelux.mychest.entity.Banner;
+import com.gigadelux.mychest.entity.Product.Category;
+import com.gigadelux.mychest.exception.BannerNullException;
 import com.gigadelux.mychest.exception.CategoryDoesNotExistException;
 import com.gigadelux.mychest.exception.NoBannerException;
 import com.gigadelux.mychest.repository.BannerRepository;
@@ -18,18 +20,35 @@ public class BannerService {
     CategoryRepository categoryRepository;
 
     public Banner get()throws NoBannerException {
-        if(!bannerRepository.existsById(1L)) throw new NoBannerException();
-        return bannerRepository.getReferenceById(1L);
+        Banner b = bannerRepository.findFirstByOrderByIdAsc();
+        if(b == null) throw new NoBannerException();
+        return b;
     }
     @Transactional
     public Banner setBanner(String image, String category) throws CategoryDoesNotExistException {
         if(!categoryRepository.existsByName(category)) throw new CategoryDoesNotExistException();
-        if(bannerRepository.existsById(1L))
-            bannerRepository.deleteById(1L);
-        Banner b = new Banner();
-        b.setImage(image);
-        b.setCategory(categoryRepository.findByName(category));
-        bannerRepository.save(b);
-        return b;
+        Category cat = categoryRepository.findByName(category);
+        Banner b = bannerRepository.findFirstByOrderByIdAsc();
+        if(b != null) {
+            b.setCategory(cat);
+            b.setImage(image);
+            bannerRepository.save(b);
+            return b;
+        }else {
+            Banner banToSet = new Banner();
+            banToSet.setImage(image);
+            banToSet.setCategory(cat);
+            bannerRepository.save(banToSet);
+            return banToSet;
+        }
+    }
+
+    @Transactional
+    public String delete() throws BannerNullException {
+        Banner b = bannerRepository.findFirstByOrderByIdAsc();
+        if(b == null) throw new BannerNullException();
+        b.setCategory(null);
+        bannerRepository.deleteById(b.getId());
+        return b.getImage();
     }
 }

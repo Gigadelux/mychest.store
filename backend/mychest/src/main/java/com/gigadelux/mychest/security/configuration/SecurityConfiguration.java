@@ -28,14 +28,14 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        //.requestMatchers("/user/addUser").permitAll()
+                        .requestMatchers("/user/addUser").permitAll()
                         .requestMatchers("/products/featured").permitAll()
                         .requestMatchers("/products/search").permitAll()
                         .requestMatchers("/products/searchByCategory").permitAll()
-                        .requestMatchers("/banner/get").permitAll()
                        .requestMatchers("/category/getAll").permitAll()
-                       // .requestMatchers("/utente/inserisciutente").permitAll()
-                        // .requestMatchers("/banner/set").hasRole("admin")
+                        .requestMatchers("/utente/inserisciutente").permitAll()
+                         .requestMatchers("/banner/set").hasRole("admin")
+                        .requestMatchers("/banner/get").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

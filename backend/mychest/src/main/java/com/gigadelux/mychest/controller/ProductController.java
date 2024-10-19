@@ -53,6 +53,8 @@ public class ProductController {
             res = productService.getProductsByCategory(category);
         }catch(ProductsByCategoryNotFoundException e){
                 return new ResponseEntity("Error category does not exist",HttpStatus.BAD_REQUEST);
+        }catch (CategoryDoesNotExistException e){
+            return new ResponseEntity("Error category does not exist",HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(res);
     }

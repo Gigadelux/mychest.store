@@ -36,13 +36,20 @@ public class CartService {
     public void deleteFor(AppUser appUser){
         List<Cart> carts = cartRepository.findCartByUser(appUser);
         for(Cart c: carts){
-            for(CartItem i: c.getCartItem()){
-                cartItemRepository.delete(i);
-            }
+            cartItemRepository.deleteAll(c.getCartItem());
             cartRepository.delete(c);
         }
     }
 
+
+    public Cart get(String userEmail, Long cartId) throws CartNotFoundException, UserNotOfCartException, UserNotFoundException {
+        if(!cartRepository.existsById(cartId)) throw new CartNotFoundException();
+        if(!cartRepository.getReferenceById(cartId).getUser().getEmail().equals(userEmail)) throw new UserNotOfCartException();
+        if(!appUserRepository.existsByEmail(userEmail)) throw new UserNotFoundException();
+        return cartRepository.getReferenceById(cartId);
+    }
+
+    @Transactional
     public Cart removeItemFrom(Long cartId,String email, String productName) throws CartNotFoundException, UserNotFoundException, UserNotOfCartException, ProductNotFound, CartItemNotInCartException {
         if(!cartRepository.existsById(cartId)) throw new CartNotFoundException();
         if(!productRepository.existsByName(productName)) throw new ProductNotFound();

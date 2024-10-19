@@ -25,7 +25,7 @@ public class Category {
 
     private Long popularity;
 
-    @OneToOne(mappedBy = "banner", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "category", cascade = CascadeType.ALL)
     //@JoinColumn(name = "banner_id", referencedColumnName = "id")
     private Banner banner;
 

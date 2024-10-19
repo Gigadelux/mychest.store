@@ -9,6 +9,6 @@ class Profile{
 
   factory Profile.empty() => Profile("", CreditCard.empty(), []);
   bool isEmpty() {
-    return email.isEmpty && creditCard.isEmpty;
+    return email.isEmpty;
   }
 }
