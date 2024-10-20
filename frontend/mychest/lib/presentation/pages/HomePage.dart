@@ -33,6 +33,7 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async{
       await ref.read(ProfileNotifierProvider.notifier).initialize();
+      await ref.read(TokenNotifierProvider.notifier).initialize();
     });
     _focusNode.addListener(() {
       setState(() {

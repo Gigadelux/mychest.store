@@ -8,12 +8,16 @@ class BannerAPI {
     final response = await http.get(Uri.parse(getBannerPath));
 
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return {
+        'status':response.statusCode,
+        'image': json.decode(response.body)['image'],
+        'category':json.decode(response.body)['category']['name']
+      };
     } else {
       return {
         'status': 'error',
         'message': 'Failed to fetch banner',
-        'error': json.decode(response.body)
+        'error': response.body
       };
     }
   }

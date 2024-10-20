@@ -20,12 +20,12 @@ class Login extends ConsumerStatefulWidget {
 
 class _LoginConsumerState extends ConsumerState<Login> {
   bool loading = false;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     bool isMobile = mediaQuery.size.width < 600;
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
     return Scaffold(
       backgroundColor: pageBackground,
       body: Column(

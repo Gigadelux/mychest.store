@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:mychest/data/models/product.dart';
 
 class ProductsAPI {
   static const String getFeatured = "http://localhost:8100/products/featured";
@@ -8,18 +9,18 @@ class ProductsAPI {
 
   Future<Map<String, dynamic>> getFeaturedProducts() async {
     final response = await http.get(Uri.parse(getFeatured));
+    print("ZIOPERA ${response.statusCode}");
 
     if (response.statusCode == 200) {
       return {
         'status': response.statusCode,
-        'featuredProducts': json.decode(response.body)
+        'featuredProducts': Product.fromJsonList(json.decode(response.body)),
       };
     } else {
       return {
         'status': response.statusCode,
         'message': 'Failed to fetch featured products',
-        'description': json.decode(response.body)['message'],
-        'error': json.decode(response.body)
+        'error': response.body
       };
     }
   }
@@ -30,14 +31,13 @@ class ProductsAPI {
     if (response.statusCode == 200) {
       return {
         'status': response.statusCode,
-        'products': json.decode(response.body)
+        'products': Product.fromJsonList(json.decode(response.body)),
       };
     } else {
       return {
         'status': response.statusCode,
         'message': 'Failed to search products by category',
-        'description': json.decode(response.body)['message'],
-        'error': json.decode(response.body)
+        'error': response.body
       };
     }
   }
@@ -48,14 +48,13 @@ class ProductsAPI {
     if (response.statusCode == 200) {
       return {
         'status': response.statusCode,
-        'products': json.decode(response.body)
+        'products': Product.fromJsonList(json.decode(response.body)),
       };
     } else {
       return {
         'status': response.statusCode,
         'message': 'Failed to search products',
-        'description': json.decode(response.body)['message'],
-        'error': json.decode(response.body)
+        'error': response.body
       };
     }
   }

@@ -35,7 +35,7 @@ class RequestWidgetTree extends StatelessWidget {
         child: Column(
           children: [
             Text('ERROR $responseCode', style: TextStyle(color: Colors.white, fontSize: responsecodeTextSize),),
-            Text(responseMessage!, style: TextStyle(color: Colors.white, fontSize: errorTextSize),)
+            Text(responseMessage??'', style: TextStyle(color: Colors.white, fontSize: errorTextSize),)
           ],
         ),
       );

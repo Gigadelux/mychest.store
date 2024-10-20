@@ -52,16 +52,21 @@ public class ProductController {
         try {
             res = productService.getProductsByCategory(category);
         }catch(ProductsByCategoryNotFoundException e){
-                return new ResponseEntity("Error category does not exist",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity("Error products not found",HttpStatus.NOT_FOUND);
         }catch (CategoryDoesNotExistException e){
-            return new ResponseEntity("Error category does not exist",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("Error category does not exist",HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(res);
     }
 
     @GetMapping("/search")
     public ResponseEntity searchProducts(@RequestParam String name){
-        List<Product> res = productService.searchProducts(name);
+        List<Product> res = null;
+        try {
+            res = productService.searchProducts(name);
+        } catch (ProductNotFound e) {
+            return new ResponseEntity("Products not found",HttpStatus.NOT_FOUND);
+        }
         return ResponseEntity.ok(res);
     }
 

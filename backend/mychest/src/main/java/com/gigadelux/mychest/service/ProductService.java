@@ -83,7 +83,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> searchProducts(String name) {
-        return productRepository.findProductByNameContaining(name);
+    public List<Product> searchProducts(String name) throws ProductNotFound{
+        List<Product> res = productRepository.findProductByNameContaining(name);
+        if(res.isEmpty()) throw new ProductNotFound();
+        return res;
     }
 }

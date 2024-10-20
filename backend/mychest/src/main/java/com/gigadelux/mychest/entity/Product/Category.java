@@ -1,5 +1,6 @@
 package com.gigadelux.mychest.entity.Product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gigadelux.mychest.entity.Banner;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,11 +21,13 @@ public class Category {
     @Column(unique = true)
     private String name;
 
+    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "category")
     private List<Product> products;
 
     private Long popularity;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "category", cascade = CascadeType.ALL)
     //@JoinColumn(name = "banner_id", referencedColumnName = "id")
     private Banner banner;
