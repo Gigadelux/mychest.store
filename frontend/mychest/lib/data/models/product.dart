@@ -1,6 +1,5 @@
 
 class Product {
-  String id;
   String name;
   String description;
   String image;
@@ -10,7 +9,6 @@ class Product {
   String platforms;
   String category;
   Product({
-    required this.id,
     required this.name,
     required this.description,
     required this.image,
@@ -22,7 +20,6 @@ class Product {
   });
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['id'],
       name: json['name'],
       description: json['description'],
       image: json['image'],
@@ -30,7 +27,7 @@ class Product {
       quantity: json['quantity'],
       type: json['type'],
       platforms: json['platforms'],
-      category: json['category']
+      category: json['category']['name']
     );
   }
   static List<Product> fromJsonList(List<dynamic> jsonList) {

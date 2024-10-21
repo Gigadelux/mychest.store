@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/keys")
@@ -23,11 +21,18 @@ public class KeyController {
 
     @PreAuthorize("hasRole('admin')")
     @PostMapping("/addKey")
-    ResponseEntity addCategory(@RequestParam String activationKey, Long productId){
+    ResponseEntity addKey(@RequestParam String activationKey, Long productId){
         Key keyAdded = keyService.addKey(activationKey, productId);
         return ResponseEntity.ok("Key added: %s".formatted(keyAdded.toString()));
     }
-
+    @PreAuthorize("hasRole('admin')")
+    @PostMapping("/addKeys")
+    ResponseEntity addKeys(@RequestBody List<String> activationKeys, Long productId){
+        for(String activationKey : activationKeys) {
+            keyService.addKey(activationKey, productId);
+        }
+        return ResponseEntity.ok("Keys added!");
+    }
     //@PreAuthorize("hasAnyAuthority('admin')")
     //@PostMapping("/deleteKey")
 }

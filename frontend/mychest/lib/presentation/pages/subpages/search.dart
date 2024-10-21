@@ -20,11 +20,8 @@ class _SearchPageState extends State<SearchPage> {
   int responseCodeCategory = -1;
   String responseErrorMessage = "";
   String responseErrorMessageCategory = "";
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_)async{
+
+  Future<void> getResources()async{
         Map response = await ProductsAPI().searchProductsByName(widget.toSearch);
         print("ZIOPERA normalSearch ${response['status']}");
         if(response['status'] == 200){
@@ -39,9 +36,9 @@ class _SearchPageState extends State<SearchPage> {
         Map responseCategory = await ProductsAPI().searchProductsByCategoryName(widget.toSearch);
         print("ZIOPERA categorySearch ${responseCategory['status']}");
         if(responseCategory['status'] == 200){
-          List<Product> prods = responseCategory['productsCategory'];
+          List<Product> prodsCat = responseCategory['products'];
           setState(() {
-            categoryProducts = prods;
+            categoryProducts = prodsCat;
           });
         }
         setState(() {
@@ -49,7 +46,20 @@ class _SearchPageState extends State<SearchPage> {
         });
 
       }
-    );
+  @override
+  void initState() {
+    super.initState();
+    getResources();
+  }
+  
+  @override
+  void didUpdateWidget(SearchPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Call getResources() if toSearch has changed
+    if (widget.toSearch != oldWidget.toSearch) {
+      getResources();
+      print(responseCodeCategory);
+    }
   }
   @override
   Widget build(BuildContext context) {

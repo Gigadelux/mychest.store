@@ -26,6 +26,14 @@ class MychestMain extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         //fontFamily: 'Ubuntu',
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.white),
+          bodyMedium: TextStyle(color: Colors.white),
+          bodySmall: TextStyle(color: Colors.white),
+          headlineLarge: TextStyle(color: Colors.white),
+          headlineMedium: TextStyle(color: Colors.white),
+          headlineSmall: TextStyle(color: Colors.white),
+        ),
         scaffoldBackgroundColor: pageBackground,
         useMaterial3: true,
       ),

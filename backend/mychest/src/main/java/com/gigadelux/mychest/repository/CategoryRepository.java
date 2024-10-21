@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category,Long> {
 
-    @Query(value = "SELECT * FROM category ORDERED BY popularity DESC LIMIT ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM category ORDER BY popularity DESC LIMIT ?1", nativeQuery = true)
     List<Category> mostPopular(int limit);
 
     Category findByName(String name);

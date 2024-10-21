@@ -27,6 +27,7 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
   bool _isFocused = false;
   final ResponsiveMenuController menuController = ResponsiveMenuController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String toSearch = '';
 
   @override
   void initState() {
@@ -89,6 +90,12 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
                   minLines: 1,
                   maxLines: 1,
                   controller: textEditingController,
+                  onChanged: (str){
+                    print(str);
+                    setState(() {
+                      toSearch = str;
+                    });
+                  },
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
                     labelText: _isFocused?"":"Search your treasure",
@@ -175,7 +182,7 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
               ]),
         backgroundColor: pageBackground,
       ),
-      body:textEditingController.text.isEmpty? const DiscoverPage(): SearchPage(toSearch: textEditingController.text),
+      body:toSearch.isEmpty? const DiscoverPage(): SearchPage(toSearch: toSearch),
     );
   }
 }

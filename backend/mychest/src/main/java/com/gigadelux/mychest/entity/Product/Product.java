@@ -27,6 +27,7 @@ public class Product {
     private int type;
     private String platforms;
 
+    @JsonIgnore
     @OneToMany
     private List<CartItem> cartItem;
 

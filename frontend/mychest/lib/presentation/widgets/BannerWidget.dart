@@ -30,6 +30,8 @@ class _BannerwidgetConsumerState extends ConsumerState<Bannerwidget> {
       widget: Image.network(
         (ref.watch(BannerStateNotifierProvider).getObject).getImage, 
         width: MediaQuery.of(context).size.width,
+        height: 200,
+        fit: BoxFit.fill,
         errorBuilder: (context, error, stackTrace) => Text('error loading image ${error.toString()}', style: const TextStyle(color: Colors.white),),
         loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
           if (loadingProgress == null) {

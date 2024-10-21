@@ -32,11 +32,14 @@ public class KeyService {
         Product p = productRepository.getReferenceById(productId);
         k.setProduct(p);
         k.setActivationKey(activationKey);
+        p.setQuantity(p.getQuantity()+1);
+        productRepository.save(p);
+        keyRepository.save(k);
         return k;
     }
 
     @Transactional
-    private void insertKeyToOrder(Long keyId, Order order) throws NoKeyFoundException, OrderNotFoundException { //it inherits Rollback
+    protected void insertKeyToOrder(Long keyId, Order order) throws NoKeyFoundException, OrderNotFoundException { //it inherits Rollback
         if(!keyRepository.existsById(keyId)) throw new NoKeyFoundException();
         Key k = keyRepository.getReferenceById(keyId);
 //     if(!orderRepository.existsById(orderId)) throw new OrderNotFoundException(); //not.........

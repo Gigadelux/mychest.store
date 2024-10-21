@@ -32,21 +32,35 @@ public class ProductService {
     @Transactional
     public List<Product> getProductsByCategory(String category) throws ProductsByCategoryNotFoundException , CategoryDoesNotExistException{
         if(!categoryRepository.existsByName(category)) throw new CategoryDoesNotExistException();
-        Category catProds = categoryRepository.findByName(category);
-        List<Product> res = catProds.getProducts();
-        if(res.isEmpty()) throw new ProductsByCategoryNotFoundException();
+        System.out.println(category);
         Category cat = categoryRepository.findByName(category);
-        cat.setPopularity(cat.getPopularity()+1L);
+        List<Product> res = cat.getProducts();
+        if(res.isEmpty()) throw new ProductsByCategoryNotFoundException();
+        System.out.println("Before increment: " + cat);
+        if (cat.getPopularity() == null) {
+            cat.setPopularity(1L);
+        }
+        else
+            cat.setPopularity(cat.getPopularity() + 1L);
+        System.out.println("After increment: " + cat);
         categoryRepository.save(cat);
         return res;
     }
 
     @Transactional
-    public void insertProduct(String name, String description, String image, int quantity, float price, int type, String platforms, Long catId) throws CategoryDoesNotExistException{
+    public Product insertProduct(String name, String description, String image, float price, int type, String platforms, Long catId) throws CategoryDoesNotExistException{
         if(!categoryRepository.existsById(catId)) throw new CategoryDoesNotExistException();
         Product p = new Product();
+        p.setName(name);
+        p.setDescription(description);
+        p.setImage(image);
+        p.setPrice(price);
+        p.setType(type);
+        p.setPlatforms(platforms);
         p.setCategory(categoryRepository.getReferenceById(catId));
+        p.setQuantity(0);
         productRepository.save(p);
+        return p;
     }
 
     @Transactional
@@ -58,9 +72,9 @@ public class ProductService {
     }
 
     @Transactional
-    public void editProduct(Long id, String name, String description, String image, int quantity, float price, int type ,String platforms, Category cat) throws ProductNotFound, CategoryDoesNotExistException{
+    public void editProduct(Long id, String name, String description, String image, int quantity, float price, int type ,String platforms, Long catId) throws ProductNotFound, CategoryDoesNotExistException{
         if(!productRepository.existsById(id)) throw new ProductNotFound();
-        if(!categoryRepository.existsById(cat.getId())) throw new CategoryDoesNotExistException();
+        if(!categoryRepository.existsById(catId)) throw new CategoryDoesNotExistException();
         Product p = productRepository.getReferenceById(id);
         p.setName(name);
         p.setDescription(description);
@@ -69,7 +83,7 @@ public class ProductService {
         p.setPrice(price);
         p.setType(type);
         p.setPlatforms(platforms);
-        p.setCategory(cat);
+        p.setCategory(categoryRepository.getReferenceById(catId));
         productRepository.save(p);
     }
 

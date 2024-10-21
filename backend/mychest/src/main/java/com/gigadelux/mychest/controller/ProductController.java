@@ -76,16 +76,15 @@ public class ProductController {
             @RequestParam String name,
             @RequestParam String description,
             @RequestParam String image,
-            @RequestParam int quantity,
             @RequestParam float price,
             @RequestParam int type,
-            @RequestParam String platforms, @RequestParam Long categoryId) throws CategoryDoesNotExistException{
+            @RequestParam String platforms, @RequestParam Long categoryId) {
         try{
-            productService.insertProduct(name,description,image,quantity,price,type,platforms,categoryId);
+            Product p = productService.insertProduct(name,description,image,price,type,platforms,categoryId);
+            return new ResponseEntity("Product of id"+p.getId()+" save successful",HttpStatus.OK);
         }catch (CategoryDoesNotExistException e) {
             return new ResponseEntity("Referencing category not found", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity("Product save successful",HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('admin')")
@@ -111,9 +110,9 @@ public class ProductController {
             @RequestParam float price,
             @RequestParam int type,
             @RequestParam String platforms,
-            @RequestBody Category cat){
+            @RequestParam Long categoryId){
         try {
-            productService.editProduct(id, name, description, image, quantity, price, type, platforms, cat);
+            productService.editProduct(id, name, description, image, quantity, price, type, platforms, categoryId);
         }catch (ProductNotFound e){return new ResponseEntity("error product not found", HttpStatus.BAD_REQUEST);}
         catch (CategoryDoesNotExistException e){return new ResponseEntity("error Category does not exist", HttpStatus.BAD_REQUEST);}
         return new ResponseEntity("Product edit successful",HttpStatus.OK);

@@ -36,6 +36,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/utente/inserisciutente").permitAll()
                          .requestMatchers("/banner/set").hasRole("admin")
                         .requestMatchers("/banner/get").permitAll()
+                        .requestMatchers("/category/mostPopular").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

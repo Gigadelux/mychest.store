@@ -46,17 +46,18 @@ class Productwidget extends StatelessWidget {
                       borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(30), bottomRight: Radius.circular(30))
                     ),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         iconTypes[product.type],
-                        Text("${product.price}"r"$", style: const TextStyle(fontWeight: FontWeight.bold),),
-                        Text(" ${product.quantity} left")
+                        Text("${product.price}"r"$", style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
+                        Text(" ${product.quantity} left", style: const TextStyle(color: Colors.white),),
                       ],
                     ),
                   ),
                 ),
-                const Align(
+                Align(
                   alignment: Alignment.topCenter,
-                  child: Text("SOLD OUT!", style: TextStyle(fontSize: 25),),
+                  child:product.quantity==0? const Text("SOLD OUT!", style: TextStyle(fontSize: 25, color: Colors.white),):const Text('')
                 )
               ],
             ),

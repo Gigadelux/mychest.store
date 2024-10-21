@@ -32,4 +32,7 @@ public class Category {
     //@JoinColumn(name = "banner_id", referencedColumnName = "id")
     private Banner banner;
 
+    public String toString(){
+        return "{name:"+name+", popularity:"+popularity+"}";
+    }
 }

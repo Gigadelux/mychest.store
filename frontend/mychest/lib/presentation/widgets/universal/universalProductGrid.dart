@@ -11,7 +11,7 @@ class Universalproductgrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height:  MediaQuery.of(context).size.height,
+      height:  MediaQuery.of(context).size.height/2,
       child: ResponsiveGridList(
       horizontalGridSpacing: 16, // Horizontal space between grid items
       verticalGridSpacing: 16, // Vertical space between grid items
