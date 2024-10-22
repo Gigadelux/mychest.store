@@ -56,7 +56,10 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
     return Scaffold(
       endDrawer: ProfilePage(
         profile: profile,
-        logoutFunction: (){},
+        logoutFunction: ()async{
+          ref.read(TokenNotifierProvider.notifier).destroy();
+          ref.read(ProfileNotifierProvider.notifier).destroy();
+        },
       ),
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,

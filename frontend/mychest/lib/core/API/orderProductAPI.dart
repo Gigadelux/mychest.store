@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-//TODO add params and body
 class OrderAPI {
   static const String payOrder = "http://localhost:8100/orders/pay";
   static const String getOrdersPath = "http://localhost:8100/orders/getOrders";
 
-  Future<Map<String, dynamic>> pay(int orderId) async {
+  Future<Map<String, dynamic>> pay(String postalCode, int cartId, String token) async {
     final response = await http.post(
-      Uri.parse(payOrder),
-      body: {'orderId': orderId.toString()},
+      Uri.parse("$payOrder?postalCode=$postalCode&id=$cartId"),
+      headers: {
+        "Authorization": "Bearer $token"
+      }
     );
 
     if (response.statusCode == 200) {
@@ -20,15 +21,18 @@ class OrderAPI {
     } else {
       return {
         'status': response.statusCode,
-        'message': 'Failed to pay for the order ${json.decode(response.body)['message']}',
-        'description': json.decode(response.body)['message'],
-        'error': json.decode(response.body)
+        'message': 'Failed to pay for the order ${response.body}',
       };
     }
   }
 
-  Future<Map<String, dynamic>> getOrders() async {
-    final response = await http.get(Uri.parse(getOrdersPath));
+  Future<Map<String, dynamic>> getOrders(String token) async {
+    final response = await http.get(
+      Uri.parse(getOrdersPath),
+      headers: {
+        "Authorization": "Bearer $token"
+      }
+    );
 
     if (response.statusCode == 200) {
       return {
@@ -38,9 +42,7 @@ class OrderAPI {
     } else {
       return {
         'status': response.statusCode,
-        'message': 'Failed to fetch orders',
-        'description': json.decode(response.body)['message'],
-        'error': json.decode(response.body)
+        'message': 'Failed to fetch orders ${response.body}'
       };
     }
   }

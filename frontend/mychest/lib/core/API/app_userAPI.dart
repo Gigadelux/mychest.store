@@ -1,8 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:mychest/data/models/OrderBucket.dart';
-import 'package:mychest/data/models/creditCard.dart';
-import 'package:mychest/data/models/profile.dart';
 import 'package:mychest/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,10 +14,11 @@ class AppUserAPI {
     final response = await http.post(
       Uri.parse(loginToken),
       body: {
+        'username': email,
         'email': email,
         'password': password,
         'grant_type': 'password',
-        'client_id': 'mystore'
+        'client_id': 'mychest-restapi'
       },
     );
     if (response.statusCode == 200) {
@@ -35,14 +33,14 @@ class AppUserAPI {
     } else {
       return {
         'status': response.statusCode,
-        'message': 'Failed to login',
+        'message': response.body,
         'error': response.body
       };
     }
   }
   Future<Map<String, dynamic>> getProfile(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('loginToken');
+    String? token = prefs.getString('token');
     if (token == null) {
       return {
         'status': 404,
@@ -60,11 +58,11 @@ class AppUserAPI {
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
       await prefs.setString('email', jsonResponse['email']);
-      
-      Profile profile = Profile(jsonResponse['email'], CreditCard.fromJson(jsonResponse['credit_card']), OrderBucket.fromJsonList(jsonResponse['orders']));
       return {
         'status': 200,
-        'profile':profile
+        'email':jsonResponse['email'],
+        'credit_card':jsonResponse['credit_card'],
+        'orders' :jsonResponse['orders']
       };
     } else {
       return {
@@ -76,32 +74,26 @@ class AppUserAPI {
   }
 
   Future<bool> isTokenValid(String? token) async {
-
     if (token == null || token.isEmpty) {
       return false;
     }
-
     final headers = {
       'Authorization': 'Bearer $token',
     };
-
     final response = await http.get(
       Uri.parse(validateTokenUrl),
       headers: headers,
     );
-
     if (response.statusCode == 200) {
       return true;
     } else {
       return false;
     }
   }
+
   Future<Map<String, dynamic>> newUser(String email, String password) async {
     final response = await http.post(
-      Uri.parse(signUp),
-      body: jsonEncode({
-        'email': email,
-      }),
+      Uri.parse("$signUp?email=$email&password=$password"),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -116,7 +108,7 @@ class AppUserAPI {
     } else {
       return {
         'status': response.statusCode,
-        'message': 'Failed to create user',
+        'message': response.body,
         'error': response.body,
       };
     }

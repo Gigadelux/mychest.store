@@ -3,6 +3,7 @@ package com.gigadelux.mychest.controller;
 import com.gigadelux.mychest.entity.User.Order;
 import com.gigadelux.mychest.exception.*;
 import com.gigadelux.mychest.service.AppUserService;
+import com.gigadelux.mychest.service.CartService;
 import com.gigadelux.mychest.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +14,7 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/orders")
@@ -23,12 +25,13 @@ public class OrderController {
     @Autowired
     AppUserService appUserService;
 
+
     @PostMapping("/pay")
     ResponseEntity pay(@RequestParam String postalCode,@RequestParam Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
         try {
             String email = appUserService.getUserEmail(authorizationHeader);
-            Order o = orderService.insertOrder(email,postalCode,id);
-            return ResponseEntity.ok("Order successfully added of products");
+            Long newCartID = orderService.insertOrder(email,postalCode,id);
+            return ResponseEntity.ok(Map.of("newCartID",newCartID));
         } catch (EmptyCartException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         } catch (CartItemNotFoundException e) {

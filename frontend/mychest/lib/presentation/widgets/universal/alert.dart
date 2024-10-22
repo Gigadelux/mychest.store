@@ -5,7 +5,7 @@ import 'package:mychest/global/colors/colorsScheme.dart';
 import 'package:mychest/presentation/widgets/gradientButton.dart';
 
 
-    Future<void> showAlert(BuildContext context, Widget toShow, Widget title, Function onPressed) async{
+    Future<void> showAlert(BuildContext context, Widget toShow, Widget title, Function onPressed, Function onCancel) async{
       await showGeneralDialog(
         barrierLabel: "Disclaimer",
         context: context, 
@@ -14,7 +14,7 @@ import 'package:mychest/presentation/widgets/gradientButton.dart';
         },
         transitionBuilder: (context, animation, secondaryAnimation, child){
           return ScaleTransition(
-            scale: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
+            scale: Tween<double>(begin: 0.2, end: 1.0).animate(animation),
             child: AlertDialog(
               title: title,
               content: toShow,
@@ -23,6 +23,13 @@ import 'package:mychest/presentation/widgets/gradientButton.dart';
               ),
               backgroundColor: pageBackground,
               actions:[ 
+                GradientButton(
+                  text: "Cancel", 
+                  onPressed: (){
+                    onCancel();
+                    Navigator.pop(context);
+                  }
+                ), 
                 GradientButton(
                   text: "Ok", 
                   onPressed: (){

@@ -1,5 +1,6 @@
 package com.gigadelux.mychest.entity.User;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ public class CreditCard { //--> CONTROL DATA FORMATTING IN CLIENT
     private String pass_code; //always
     private String expire_time; //Always in the format mm/YYYY
 
+    @JsonIgnore
     @OneToOne
     private AppUser user;
 }

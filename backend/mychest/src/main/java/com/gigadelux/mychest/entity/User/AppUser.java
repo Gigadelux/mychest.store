@@ -22,4 +22,7 @@ public class AppUser {
 
     @OneToMany
     private List<Order> orders;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Cart> carts;
 }

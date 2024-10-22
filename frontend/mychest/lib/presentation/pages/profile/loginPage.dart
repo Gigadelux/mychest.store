@@ -145,10 +145,30 @@ class _LoginConsumerState extends ConsumerState<Login> {
                             setState(() {
                               loading = true;
                             });
-                            Map res = await AppUserAPI().login(emailController.text, passwordController.text);                          
-                            Map cartRes = await CartAPI().createCart(res['token']);
+                            Map res = await AppUserAPI().login(emailController.text, passwordController.text);     
+                            if(res['status']!=200){
+                              Fluttertoast.showToast(msg: res['message']);
+                              setState(() {
+                                loading = false;
+                              });
+                              return;
+                            } 
+                            Map? cartRes;                    
+                            try{
+                              cartRes = await CartAPI().createCart(res['token']);
+                            }catch(e){
+                              Fluttertoast.showToast(msg: e.toString());
+                              setState(() {
+                                loading = false;
+                              });
+                              return;
+                            }
                             if(cartRes['status']!=200){
                               Fluttertoast.showToast(msg: cartRes['message']);
+                              setState(() {
+                                loading = false;
+                              });
+                              return;
                             }
                             if(res['status']==200){
                               try{
@@ -156,9 +176,13 @@ class _LoginConsumerState extends ConsumerState<Login> {
                                 await ref.read(ProfileNotifierProvider.notifier).initialize();
                                 Navigator.pop(context);
                               }catch(e){
+                                print(e);
                                 ref.read(TokenNotifierProvider.notifier).destroy();
                                 ref.read(ProfileNotifierProvider.notifier).destroy();
                                 Fluttertoast.showToast(msg: "Sorry unknown error🥺");
+                                setState(() {
+                                  loading = false;
+                                });
                                 return;
                               }
                             }else{
@@ -168,27 +192,50 @@ class _LoginConsumerState extends ConsumerState<Login> {
                         GradientOutLineButton(
                           text: "Sign up", 
                           onPressed: ()async{
-                            Map response = await AppUserAPI().newUser(emailController.text, passwordController.text);
+                            setState(() {
+                              loading = true;
+                            });
+                            String email = emailController.text;
+                            String passw = passwordController.text;
+                            Map response = await AppUserAPI().newUser(email, passw);
                             int? cartId = response['cartId'];
-                            Map res = await AppUserAPI().login(emailController.text, passwordController.text);
-                            if(res['status']!=200 || response['status']!=200){
+                            print(response);
+                            print(response['message']);
+                            if(response['status']!=200){
                               Fluttertoast.showToast(msg: response['message']);
+                              setState(() {
+                                loading = false;
+                              });
                               return;
                             }
                             if(cartId==null){
                               Fluttertoast.showToast(msg: response['message']);
+                              setState(() {
+                                loading = false;
+                              });
+                              return;
+                            }
+                            Map res = await AppUserAPI().login(email, passw);
+                            if(res['status']!= 200){
+                              Fluttertoast.showToast(msg: 'failed to initialize access');
+                              setState(() {
+                                loading = false;
+                              });
                               return;
                             }
                             final prefs = await SharedPreferences.getInstance();
                             prefs.setInt("cartId", cartId);
                             try{
-                                await ref.read(TokenNotifierProvider.notifier).setToken(res['token']);
+                                await ref.read(TokenNotifierProvider.notifier).setToken(res['access_token']);
                                 await ref.read(ProfileNotifierProvider.notifier).initialize();
                                 Navigator.pop(context);
                               }catch(e){
                                 ref.read(TokenNotifierProvider.notifier).destroy();
                                 ref.read(ProfileNotifierProvider.notifier).destroy();
                                 Fluttertoast.showToast(msg: "Sorry unknown error🥺");
+                                setState(() {
+                                  loading = false;
+                                });
                                 return;
                               }
                           }, height: 50, width: 100)

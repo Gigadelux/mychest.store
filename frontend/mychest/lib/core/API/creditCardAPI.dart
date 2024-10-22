@@ -16,7 +16,7 @@ class CreditCardAPI {
       };
     } else {
       return {
-        'status': 'error',
+        'status': response.statusCode,
         'message': 'Failed to fetch credit card',
         'description': json.decode(response.body)['message'],
         'error': json.decode(response.body)

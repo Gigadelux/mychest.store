@@ -23,6 +23,7 @@ public class CartItemService {
     @Autowired
     CartItemRepository cartItemRepository;
 
+    @Transactional
     boolean isQuantityAvaible(Long id) throws CartItemNotFoundException{
         if(!cartItemRepository.existsById(id)) throw new CartItemNotFoundException();
         CartItem cartItem = cartItemRepository.getReferenceById(id);

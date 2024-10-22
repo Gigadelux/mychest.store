@@ -6,6 +6,7 @@ class CartAPI {
   static const String addCart = "http://localhost:8100/cart/add";
   static const String addToCart = "http://localhost:8100/cart/addItem";
   static const String removeItem = "http://localhost:8100/cart/removeItem";
+  static const String getCartPath = "http://localhost:8100/cart/get";
 
   Future<Map<String, dynamic>> createCart(String token) async {
     final uri = Uri.parse(addCart);
@@ -27,24 +28,52 @@ class CartAPI {
     } else {
       return {
         'status': response.statusCode,
-        'message': 'Failed to create cart',
+        'message': response.body,
         'error': json.decode(response.body)
       };
     }
   }
 
-  Future<Map<String, dynamic>> addItemToCart(String productName, int quantity) async {
+  Future<Map<String, dynamic>> getCart(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? cartId = prefs.getInt('cartId');
-    String? email = prefs.getString('email');
+    if(cartId==null){
+      return {
+        'status': 401,
+        'cart': 'error in your account',
+        'message': 'Item added to cart',
+      };
+    }
     final response = await http.post(
-      Uri.parse(addToCart),
-      body: {
-        'cartId': cartId,
-        'email': email,
-        'productName':productName,
-        'quantity':quantity
-      },
+      Uri.parse("$getCartPath?cartId=$cartId"),
+      headers: {
+        "Authorization":"Bearer $token"
+      }
+    );
+
+    if (response.statusCode == 200) {
+      return {
+        'status': response.statusCode,
+        'cart': json.decode(response.body),
+        'message': 'Item added to cart',
+      };
+    } else {
+      return {
+        'status': response.statusCode,
+        'message': response.body,
+        'error': response.body
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> addItemToCart(String productName, int quantity, String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? cartId = prefs.getInt('cartId');
+    final response = await http.post(
+      Uri.parse("$addToCart?cartId=$cartId&productName=$productName&quantity=$quantity"),
+      headers: {
+        "Authorization":"Bearer $token"
+      }
     );
 
     if (response.statusCode == 200) {
@@ -62,17 +91,14 @@ class CartAPI {
     }
   }
 
-  Future<Map<String, dynamic>> removeItemFromCart(String productName) async {
+  Future<Map<String, dynamic>> removeItemFromCart(String productName, String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? cartId = prefs.getInt('cartId');
-    String? email = prefs.getString('email');
     final response = await http.post(
-      Uri.parse(removeItem),
-      body: {
-        'cartId': cartId,
-        'email':email,
-        'productName': productName,
-      },
+      Uri.parse("$removeItem?cartId=$cartId&productName=$productName"),
+      headers: {
+        'Authorization':'Bearer $token'
+      }
     );
 
     if (response.statusCode == 200) {

@@ -6,6 +6,7 @@ import com.gigadelux.mychest.entity.User.CartItem;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.jboss.resteasy.spi.touri.MappedBy;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class Product {
     private String platforms;
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany(mappedBy = "product")
     private List<CartItem> cartItem;
 
     //JsonIgnore affect only the result in the ProductController and not the business logic

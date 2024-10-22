@@ -62,7 +62,7 @@ public class OrderService {
     // on the EntityManager to ensure the state is persisted to the database.
     @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT) //rollback For -> Exceptions
     @Transactional(readOnly = false) //////////////////////////////////////////////////////////                     v   -> the cartId will buy first only the cart from the frontend
-    public Order insertOrder(String email, String postalCode, Long cartId) throws EmptyCartException, CartItemNotFoundException, InsufficientQuantityException, OrderNotFoundException, ProductNotFound, NoKeyFoundException, InsufficientCreditException, CreditCardNotFoundException, UserNotFoundException, UserNotOfCartException { //TODO here all the key service methods necessary to complete the trasaction
+    public Long insertOrder(String email, String postalCode, Long cartId) throws EmptyCartException, CartItemNotFoundException, InsufficientQuantityException, OrderNotFoundException, ProductNotFound, NoKeyFoundException, InsufficientCreditException, CreditCardNotFoundException, UserNotFoundException, UserNotOfCartException {
         if(!appUserRepository.existsByEmail(email)) throw new UserNotFoundException();
         AppUser appUser = appUserRepository.findAppUserByEmail(email);
         if(!creditCardRepository.existsByUser(appUser)) throw new CreditCardNotFoundException();
@@ -97,7 +97,8 @@ public class OrderService {
                 entityManager.merge(p);
             }
         }
+        orderRepository.save(o);
         cartService.deleteFor(appUser); //Accessed by appUser
-        return o;
+        return cartService.addNewCart(email);
     }
 }

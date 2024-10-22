@@ -13,6 +13,8 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Controller
 @RequestMapping("/cart")
 public class CartController {
@@ -27,7 +29,7 @@ public class CartController {
         try {
             String email = appUserService.getUserEmail(authorizationHeader);
             Long id = cartService.addNewCart(email);
-            return ResponseEntity.ok(id);
+            return ResponseEntity.ok(Map.of("cartId",id));
         }catch (UserNotFoundException e){
             return new ResponseEntity("error user not found", HttpStatus.NOT_FOUND);
         }catch (JwtException e){

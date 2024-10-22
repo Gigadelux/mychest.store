@@ -11,4 +11,9 @@ class ObjectRequest <T>{
 
   String? get getErrorMessage => errorMessage;
   set setErrorMessage(String? message) => errorMessage = message;
+
+  @override
+  String toString() {
+    return 'ObjectRequest(object: $object, statusCode: $statusCode, errorMessage: $errorMessage)';
+  }
 }

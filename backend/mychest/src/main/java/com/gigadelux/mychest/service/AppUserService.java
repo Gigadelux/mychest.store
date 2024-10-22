@@ -27,13 +27,13 @@ public class AppUserService {
     KeycloakService keycloakService;
 
     @Transactional
-    public void addUser(AppUser appUser, String password)throws EmailAlreadyExistsException, WeakPasswordException, InvalidEmailException {
-        if(appUserRepository.existsByEmail(appUser.getEmail())) throw new EmailAlreadyExistsException();
-        validateEmail(appUser.getEmail());
+        public void addUser(String email, String password)throws EmailAlreadyExistsException, WeakPasswordException, InvalidEmailException {
+        if(appUserRepository.existsByEmail(email)) throw new EmailAlreadyExistsException();
+        validateEmail(email);
         validatePassword(password);
         AppUser u = new AppUser();
-        u.setEmail(appUser.getEmail());
-        keycloakService.addAppUser(appUser,password);
+        u.setEmail(email);
+        keycloakService.addAppUser(u,password);
         appUserRepository.save(u);
     }
 

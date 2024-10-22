@@ -13,15 +13,17 @@ class TokenNotifier extends StateNotifier<String?>{
   Future<void> setToken(String? token) async {
     if(token == null) return;
     if(!await AppUserAPI().isTokenValid(token)) return;
-    saveToken(token);
+    await _saveToken(token);
     state = token;
   }
-  Future<void> saveToken(String? token) async {
+  Future<void> _saveToken(String? token) async {
     if(token == null) return;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
   }
-  void destroy(){
+  Future<void> destroy()async{
     state = null;
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 }
