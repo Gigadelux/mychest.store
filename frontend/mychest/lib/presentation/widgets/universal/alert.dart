@@ -32,9 +32,11 @@ import 'package:mychest/presentation/widgets/gradientButton.dart';
                 ), 
                 GradientButton(
                   text: "Ok", 
-                  onPressed: (){
-                    onPressed;
-                    Navigator.pop(context);
+                  onPressed: ()async{
+                    bool? hasToPop = await onPressed();
+                    if(hasToPop == null || !hasToPop) {
+                      Navigator.pop(context);
+                    }
                   }
                 ),
               ]

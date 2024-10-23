@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mychest/core/API/app_userAPI.dart';
 import 'package:mychest/core/API/creditCardAPI.dart';
 import 'package:mychest/data/models/OrderBucket.dart';
@@ -24,8 +25,10 @@ class ProfileNotifier extends StateNotifier<Profile>{
     try{
       creditCard = CreditCard.fromJson(response['credit_card']);
       orderBuckets = OrderBucket.fromJsonList(response['orders']);
-    }catch(e){}
-    print(response['email']);
+    }catch(e){
+      print(e);
+    }
+    print(response);
     Profile p = Profile(response['email'], creditCard ?? CreditCard.empty(),orderBuckets);
     state = p;
   }
@@ -35,6 +38,10 @@ class ProfileNotifier extends StateNotifier<Profile>{
     if(res['status']==200){
       Profile p = Profile(state.email, CreditCard(cardNumber: cardNumber, passCode: passCode, expireTime: expireTime), state.orderBuckets);
       state = p;
+      Fluttertoast.showToast(msg: "Credit card edited🥳");
+    }
+    else{
+      Fluttertoast.showToast(msg: "failed to set");
     }
     print(res);
   }
@@ -44,4 +51,5 @@ class ProfileNotifier extends StateNotifier<Profile>{
     final prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }
+  
 }

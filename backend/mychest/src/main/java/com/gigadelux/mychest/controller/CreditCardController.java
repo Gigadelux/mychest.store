@@ -41,8 +41,9 @@ public class CreditCardController {
 
     @PreAuthorize("hasRole('clientUser')")
     @PostMapping("/setTo")
-    public ResponseEntity setCreditCardOfUser(@RequestParam String email, @RequestBody CreditCard creditCard){
+    public ResponseEntity setCreditCardOfUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, @RequestBody CreditCard creditCard){
         try {
+            String email = appUserService.getUserEmail(authorizationHeader);
             CreditCard c = creditCardService.setCreditCard(email, creditCard);
             return ResponseEntity.ok(c);
         } catch (UserNotFoundException e) {

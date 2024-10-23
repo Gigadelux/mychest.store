@@ -6,7 +6,6 @@ import 'package:mychest/data/models/product.dart';
 import 'package:mychest/global/colors/colorsScheme.dart';
 import 'package:mychest/presentation/state_manager/providers/appProviders.dart';
 import 'package:mychest/presentation/widgets/gradientButton.dart';
-import 'package:mychest/presentation/widgets/universal/alert.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class ProductPage extends ConsumerStatefulWidget {
@@ -74,9 +73,13 @@ class _ProductPageConsumerState extends ConsumerState<ProductPage> {
                           const SizedBox(width: 8,),
                           GradientText("$productQuantity", style: const TextStyle(color: Colors.white, fontSize: 22),colors: gradient,),
                           const SizedBox(width: 8,),
-                          IconButton(onPressed: ()=>setState(() {
-                            productQuantity = productQuantity+1;
-                          }), icon: const Icon(Icons.add_rounded, color: Colors.white,size: 22,)),
+                          IconButton(onPressed: (){
+                            if(widget.product.quantity>productQuantity) {
+                              setState(() {
+                                productQuantity = productQuantity+1;
+                              });
+                            }
+                          }, icon: const Icon(Icons.add_rounded, color: Colors.white,size: 22,)),
                         ]),
                     ),
                     const SizedBox(height: 10,),

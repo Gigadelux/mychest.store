@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mychest/core/API/APIpaths.dart';
 import 'package:mychest/data/models/CartItem.dart';
 import 'package:mychest/data/models/creditCard.dart';
 import 'package:mychest/presentation/state_manager/providers/appProviders.dart';
+import 'package:mychest/presentation/widgets/editCreditCard.dart';
 import 'package:mychest/presentation/widgets/gradientButton.dart';
 import 'package:mychest/presentation/widgets/gradientOutlineButton.dart';
 import 'package:mychest/presentation/widgets/universal/RequestWidgetTree.dart';
@@ -23,6 +23,7 @@ class _CartpageConsumerState extends ConsumerState<Cartpage> {
   PageController pageController = PageController();
   int cart = -1;
   double totalPrice = 0;
+  CreditCard card = CreditCard.empty();
   @override
   void initState() {
     super.initState();
@@ -33,9 +34,12 @@ class _CartpageConsumerState extends ConsumerState<Cartpage> {
         responseCode = ref.read(CartNotifierProvider).getStatusCode;
       });
       double priceToSet = calculatePrice();
+      CreditCard actual = ref.watch(ProfileNotifierProvider).creditCard;
       setState(() {
         totalPrice = priceToSet;
+        card = actual;
       });
+      print("NUMERO CREDITCARD: ${card.cardNumber}");
     });
   }
   double calculatePrice(){
@@ -153,11 +157,11 @@ class _CartpageConsumerState extends ConsumerState<Cartpage> {
                           children: [
                             const Icon(UniconsLine.credit_card, color: Colors.white, size: 60),
                             const SizedBox(width: 14),
-                            ref.read(ProfileNotifierProvider).creditCard.isEmpty?
-                              Text(ref.read(ProfileNotifierProvider).creditCard.cardNumber, style: const TextStyle(fontSize: 25, color: Colors.white),):
-                              const Text("Insert credit card", style: TextStyle(fontSize: 25, color: Colors.white),),
+                            Text(card.cardNumber, style: const TextStyle(fontSize: 25, color: Colors.white),),
                             const SizedBox(width: 14),
-                            GradientOutLineButton(text: "edit", onPressed: (){}, height: 40, width: 70),
+                            GradientOutLineButton(text: "edit", onPressed: ()async{await editCreditCardMenu(context, (){setState(() {
+                              card = ref.watch(ProfileNotifierProvider).creditCard;
+                            });}, (){}, ref);}, height: 40, width: 70),
                           ],
                         ),
                       ],

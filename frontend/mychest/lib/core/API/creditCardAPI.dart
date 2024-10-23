@@ -26,16 +26,20 @@ class CreditCardAPI {
 
   Future<Map<String, dynamic>> setCreditCard(String cardNumber,String passCode,String expireTime) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? email = prefs.getString('email');
+    String? token = prefs.getString('token');
     final response = await http.post(
-      Uri.parse('$setCreditCardPath?email=$email'),
-      body: {
+      Uri.parse(setCreditCardPath),
+      headers: {
+        "Authorization":"Bearer $token",
+        'Content-Type': 'application/json'
+      },
+      body: jsonEncode({
         'card_number': cardNumber,
         'pass_code':passCode,
         'expire_time':expireTime
-      },
+      }),
     );
-
+    print(response.body);
     if (response.statusCode == 200) {
       return {
         'status': response.statusCode,

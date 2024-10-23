@@ -44,6 +44,8 @@ dependencies:
   shared_preferences: ^2.3.2
   http: ^1.2.2
   fluttertoast: ^8.2.8
+  flutter_stretchable_widgets: ^0.0.9
+  gpt_markdown: ^0.1.9
 
 dev_dependencies:
   flutter_test:

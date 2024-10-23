@@ -10,6 +10,7 @@ import org.jboss.resteasy.spi.touri.MappedBy;
 
 import java.util.List;
 
+@Table(name = "product")
 @Entity
 @Getter
 @Setter
@@ -27,6 +28,9 @@ public class Product {
     private float price;
     private int type;
     private String platforms;
+
+    @Version  // Add this annotation for optimistic locking
+    private int version;
 
     @JsonIgnore
     @OneToMany(mappedBy = "product")

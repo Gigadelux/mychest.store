@@ -15,7 +15,7 @@ class OrderAPI {
     if (response.statusCode == 200) {
       return {
         'status': response.statusCode,
-        'order': json.decode(response.body),
+        'newCartID': json.decode(response.body),
         'message': 'Order paid successfully',
       };
     } else {

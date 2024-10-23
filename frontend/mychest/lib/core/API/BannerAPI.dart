@@ -15,7 +15,7 @@ class BannerAPI {
       };
     } else {
       return {
-        'status': 'error',
+        'status': response.statusCode,
         'message': 'Failed to fetch banner',
         'error': response.body
       };

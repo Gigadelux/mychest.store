@@ -68,34 +68,27 @@ public class OrderService {
         if(!creditCardRepository.existsByUser(appUser)) throw new CreditCardNotFoundException();
         CreditCard creditCard = creditCardRepository.findByUser(appUser);
         List<Cart> carts = cartRepository.findCartByUser(appUser);
-        boolean found = false;
         if(carts.isEmpty()) throw new EmptyCartException();
         float price = 0f;
-        for(Cart c: carts){
-            if(c.getCartItem().isEmpty()) throw new EmptyCartException();
-            if(Objects.equals(c.getId(), cartId)) {
-                for (CartItem i : c.getCartItem()) {
-                    if (!cartItemService.isQuantityAvaible(i.getId())) throw new InsufficientQuantityException();
-                    price = price + (i.getProduct().getPrice() * i.getQuantity());
-                }
-                found = true;
-            }
+        Cart c = cartRepository.getReferenceById(cartId);
+        if(c.getCartItem().isEmpty()) throw new EmptyCartException();
+        if(!c.getUser().getEmail().equals(email)) throw new UserNotOfCartException();
+        for (CartItem i : c.getCartItem()) {
+            if (!cartItemService.isQuantityAvaible(i.getId())) throw new InsufficientQuantityException();
+            price = price + (i.getProduct().getPrice() * i.getQuantity());
         }
-        if(!found) throw new UserNotOfCartException();
         if(!creditCardService.hasCredit(appUser,price))throw new InsufficientCreditException();
         Order o = new Order();
         o.setCreditCard(creditCard);
         o.setUser(appUser);
         o.setPostalCode(postalCode);
         orderRepository.save(o);
-        for(Cart c: carts){
-            for(CartItem i: c.getCartItem()){
-                Product p = productRepository.getReferenceById(i.getProduct().getId());
-                entityManager.lock(p,LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-                keyService.insertKeysToOrder(o,i.getProduct().getId(),i.getQuantity());
-                p.setQuantity(p.getQuantity()-i.getQuantity());
-                entityManager.merge(p);
-            }
+        for(CartItem i: c.getCartItem()){
+            Product p = productRepository.getReferenceById(i.getProduct().getId());
+            entityManager.lock(p,LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+            keyService.insertKeysToOrder(o,i.getProduct().getId(),i.getQuantity());
+            p.setQuantity(p.getQuantity()-i.getQuantity());
+            entityManager.merge(p);
         }
         orderRepository.save(o);
         cartService.deleteFor(appUser); //Accessed by appUser

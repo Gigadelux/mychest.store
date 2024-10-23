@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.checkerframework.common.aliasing.qual.Unique;
 
+@Table(name = "cart_item")
 @Entity
 @Getter
 @Setter

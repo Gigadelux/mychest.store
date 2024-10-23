@@ -62,6 +62,7 @@ class Cartstatenotifier extends StateNotifier<ObjectRequest<Cart>>{
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     int? cartId = prefs.getInt('cartId');
+    print(cartId);
     if(!await AppUserAPI().isTokenValid(token) || cartId == null){
       state = ObjectRequest(object: state.getObject, statusCode: 401, errorMessage: 'Error in your account');
       return;
@@ -69,13 +70,20 @@ class Cartstatenotifier extends StateNotifier<ObjectRequest<Cart>>{
     Map res = await OrderAPI().pay(postalCode, cartId, token!);
     int status = res['status'];
     Cart? cart;
+    print(res);
     if(status==200) {
       cart = Cart.empty();
+      await save(res['newCartID']);
     }
     state = ObjectRequest(object: cart??state.getObject,statusCode: status, errorMessage: res['message']);
   }
 
   flush()async{
     state = ObjectRequest(object: Cart.empty());
+  }
+
+  save(int cartId)async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt("cartId", cartId);
   }
 }

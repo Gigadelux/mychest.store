@@ -39,6 +39,7 @@ public class CartService {
             cartItemRepository.deleteAll(c.getCartItem());
             cartRepository.delete(c);
         }
+        appUserRepository.save(appUser);
     }
 
 

@@ -33,10 +33,11 @@ public class SecurityConfiguration {
                         .requestMatchers("/products/search").permitAll()
                         .requestMatchers("/products/searchByCategory").permitAll()
                        .requestMatchers("/category/getAll").permitAll()
-                        .requestMatchers("/utente/inserisciutente").permitAll()
                          .requestMatchers("/banner/set").hasRole("admin")
                         .requestMatchers("/banner/get").permitAll()
                         .requestMatchers("/category/mostPopular").permitAll()
+                        .requestMatchers("aiAssistant/reccomendProducts").permitAll()
+                        .requestMatchers("aiAssistant/newReccomendation").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

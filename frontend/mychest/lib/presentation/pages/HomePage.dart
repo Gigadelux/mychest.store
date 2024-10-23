@@ -9,9 +9,11 @@ import 'package:mychest/presentation/pages/profile/loginPage.dart';
 import 'package:mychest/presentation/pages/profile/profilePage.dart';
 import 'package:mychest/presentation/pages/subpages/search.dart';
 import 'package:mychest/presentation/state_manager/providers/appProviders.dart';
+import 'package:mychest/presentation/widgets/minichat.dart';
 import 'package:unicons/unicons.dart';
 import 'package:scaffold_responsive/scaffold_responsive.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_stretchable_widgets/flutter_stretchable_widgets.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -42,6 +44,9 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
       });
     });
   }
+
+  double assistantWidth =0;
+  double assistantHeight = 0;
 
   @override
   void dispose() {
@@ -185,7 +190,18 @@ class _HomePageConsumerState extends ConsumerState<HomePage> {
               ]),
         backgroundColor: pageBackground,
       ),
-      body:toSearch.isEmpty? const DiscoverPage(): SearchPage(toSearch: toSearch),
+      body: Stack(
+        children:[
+          toSearch.isEmpty? const DiscoverPage(): SearchPage(toSearch: toSearch),
+          const Positioned(
+            bottom: 0,
+            right: 0,
+            child: Padding(
+              padding: EdgeInsets.all(18.0),
+              child: MiniChatBot(),
+            ),
+          )
+        ]),
     );
   }
 }
