@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mychest/data/models/CartItem.dart';
 import 'package:mychest/data/models/creditCard.dart';
+import 'package:mychest/global/colors/colorsScheme.dart';
 import 'package:mychest/presentation/state_manager/providers/appProviders.dart';
 import 'package:mychest/presentation/widgets/editCreditCard.dart';
 import 'package:mychest/presentation/widgets/gradientButton.dart';
 import 'package:mychest/presentation/widgets/gradientOutlineButton.dart';
 import 'package:mychest/presentation/widgets/universal/RequestWidgetTree.dart';
+import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:unicons/unicons.dart';
 
 class Cartpage extends ConsumerStatefulWidget {
@@ -24,6 +26,7 @@ class _CartpageConsumerState extends ConsumerState<Cartpage> {
   int cart = -1;
   double totalPrice = 0;
   CreditCard card = CreditCard.empty();
+
   @override
   void initState() {
     super.initState();
@@ -49,6 +52,52 @@ class _CartpageConsumerState extends ConsumerState<Cartpage> {
     }
     return res;
   }
+  
+  
+  Future<void> addToCart(int index)async{
+    bool authenticated = !(ref.watch(TokenNotifierProvider) == null || ref.watch(TokenNotifierProvider)!.isEmpty);
+    if(!authenticated){
+      Fluttertoast.showToast(msg: "Error in your account", toastLength: Toast.LENGTH_SHORT);
+      return;
+    }
+    try{
+      await ref.read(CartNotifierProvider.notifier).addItem(ref.watch(CartNotifierProvider).getObject.cartItems[index].product.name, 1);
+    }catch(e){print(e);}
+    if(ref.watch(CartNotifierProvider).getStatusCode!=200){
+      print(ref.watch(CartNotifierProvider).errorMessage);
+      Fluttertoast.showToast(msg: 'Error adding item');
+      return;
+    }else{
+      Fluttertoast.showToast(msg: 'Added 🥳');
+    }
+    setState(() {
+      
+    });
+  }
+
+  Future<void> removeToCart(int index)async{
+    bool authenticated = !(ref.watch(TokenNotifierProvider) == null || ref.watch(TokenNotifierProvider)!.isEmpty);
+    if(!authenticated){
+      Fluttertoast.showToast(msg: "Error in your account", toastLength: Toast.LENGTH_SHORT);
+      return;
+    }
+    try{
+      await ref.read(CartNotifierProvider.notifier).removeItem(ref.watch(CartNotifierProvider).getObject.cartItems[index].product.name, 1);
+    }catch(e){print(e);}
+    if(ref.watch(CartNotifierProvider).getStatusCode!=200){
+      print(ref.watch(CartNotifierProvider).errorMessage);
+      Fluttertoast.showToast(msg: 'Error adding item');
+      return;
+    }else{
+      Fluttertoast.showToast(msg: 'Removed');
+    }
+    setState(() {
+      
+    });
+  }
+
+  
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -92,6 +141,16 @@ class _CartpageConsumerState extends ConsumerState<Cartpage> {
                               ),
                               const SizedBox(height: 10,),
                               Text("${cartItems[index].product.price*cartItems[index].quantity.toDouble()} ${r"$"}", style: const TextStyle(fontSize: 30),),
+                              const SizedBox(height: 25,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(onPressed: ()async{await removeToCart(index);}, icon: const Icon(Icons.remove_rounded, color: Colors.white,size: 22,)),
+                                  const SizedBox(width: 8,),
+                                  GradientText("${ref.watch(CartNotifierProvider).getObject.cartItems[index].quantity}", style: const TextStyle(color: Colors.white, fontSize: 22),colors: gradient,),
+                                  const SizedBox(width: 8,),
+                                  IconButton(onPressed: ()async{await addToCart(index);}, icon: const Icon(Icons.add_rounded, color: Colors.white,size: 22,)),
+                                ]),
                             ],
                           )
                         ],

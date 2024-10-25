@@ -57,22 +57,9 @@ public class CartService {
     public Cart removeItemFrom(Long cartId,String email, String productName) throws CartNotFoundException, UserNotFoundException, UserNotOfCartException, ProductNotFound, CartItemNotInCartException {
         if(!cartRepository.existsById(cartId)) throw new CartNotFoundException();
         if(!productRepository.existsByName(productName)) throw new ProductNotFound();
-        if(!cartRepository.getReferenceById(cartId).getUser().getEmail().equals(email)) throw new UserNotOfCartException();
         if(!appUserRepository.existsByEmail(email)) throw new UserNotFoundException();
-        Cart c = cartRepository.getReferenceById(cartId);
-        for(CartItem i:c.getCartItem()){
-            if(i.getProduct().getName().equals(productName)){
-                if(i.getQuantity()>0) {
-                    i.setQuantity(i.getQuantity() - 1);
-                    cartItemRepository.save(i);
-                }else{
-                    cartItemRepository.delete(i);
-                }
-                cartRepository.save(c);
-                return c;
-            }
-        }
-        throw new CartItemNotInCartException();
+        if(!cartRepository.getReferenceById(cartId).getUser().getEmail().equals(email)) throw new UserNotOfCartException();
+        return removeItem(cartId, productName);
     }
 
 
@@ -82,6 +69,45 @@ public class CartService {
         if(!productRepository.existsByName(productName)) throw new ProductNotFound();
         if(!appUserRepository.existsByEmail(email)) throw new UserNotFoundException();
         if(!cartRepository.getReferenceById(cartId).getUser().getEmail().equals(email)) throw new UserNotOfCartException();
+        return addItem(productName, cartId, quantity);
+    }
+
+    public Long addNewCart(String email) throws UserNotFoundException {
+        if(!appUserRepository.existsByEmail(email)) throw new UserNotFoundException();
+        AppUser user = appUserRepository.findAppUserByEmail(email);
+        Cart c = new Cart();
+        c.setUser(user);
+        return cartRepository.save(c).getId();
+    }
+
+    public Long addNewUnsignedCart(){
+        return cartRepository.save(new Cart()).getId();
+    }
+
+
+
+    @Transactional
+    public Cart addToUnsignedCart(Long cartId, String productName, int quantity) throws CartNotFoundException,ProductNotFound {
+        return addItem(productName, cartId, quantity);
+    }
+
+    @Transactional
+    public  Cart removeToUnsignedCart(Long cartId, String productName) throws CartNotFoundException, ProductNotFound, CartItemNotInCartException {
+        return removeItem(cartId, productName);
+    }
+
+    public Cart setUser(Long cartId, String email) throws CartNotFoundException, UserNotFoundException {
+        if(cartRepository.existsById(cartId)) throw new CartNotFoundException();
+        if(appUserRepository.existsByEmail(email)) throw new UserNotFoundException();
+        Cart cart = cartRepository.getReferenceById(cartId);
+        cart.setUser(appUserRepository.findAppUserByEmail(email));
+        return cart;
+    }
+
+    /////////////////////////////////////////* UTILS *///////////////////////////////////////////
+    private Cart addItem(String productName, Long cartId, int quantity) throws CartNotFoundException, ProductNotFound {
+        if(!cartRepository.existsById(cartId)) throw new CartNotFoundException();
+        if(!productRepository.existsByName(productName)) throw new ProductNotFound();
         if(quantity<=0) throw new InvalidQuantityException();
         Cart c = cartRepository.getReferenceById(cartId);
         for(CartItem i:c.getCartItem()){
@@ -100,12 +126,23 @@ public class CartService {
         cartRepository.save(c);
         return c;
     }
-    public Long addNewCart(String email) throws UserNotFoundException {
-        if(!appUserRepository.existsByEmail(email)) throw new UserNotFoundException();
-        AppUser user = appUserRepository.findAppUserByEmail(email);
-        Cart c = new Cart();
-        c.setUser(user);
-        return cartRepository.save(c).getId();
-    }
 
+    private Cart removeItem(Long cartId, String productName) throws CartNotFoundException, ProductNotFound, CartItemNotInCartException {
+        if(!cartRepository.existsById(cartId)) throw new CartNotFoundException();
+        if(!productRepository.existsByName(productName)) throw new ProductNotFound();
+        Cart c = cartRepository.getReferenceById(cartId);
+        for(CartItem i:c.getCartItem()){
+            if(i.getProduct().getName().equals(productName)){
+                if(i.getQuantity()>0) {
+                    i.setQuantity(i.getQuantity() - 1);
+                    cartItemRepository.save(i);
+                }else{
+                    cartItemRepository.delete(i);
+                }
+                cartRepository.save(c);
+                return c;
+            }
+        }
+        throw new CartItemNotInCartException();
+    }
 }

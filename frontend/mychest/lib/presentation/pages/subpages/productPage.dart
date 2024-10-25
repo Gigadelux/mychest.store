@@ -99,6 +99,7 @@ class _ProductPageConsumerState extends ConsumerState<ProductPage> {
     if(ref.watch(CartNotifierProvider).getStatusCode!=200){
       print(ref.watch(CartNotifierProvider).errorMessage);
       Fluttertoast.showToast(msg: 'Error adding cart');
+      return;
     }else{
       Fluttertoast.showToast(msg: 'Added x$productQuantity 🥳');
     }

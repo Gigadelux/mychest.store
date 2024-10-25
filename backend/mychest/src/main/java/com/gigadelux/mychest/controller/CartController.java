@@ -74,7 +74,7 @@ public class CartController {
         }
     }
 
-    @RequestMapping("/get")
+    @GetMapping("/get")
     ResponseEntity getCart(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestParam Long cartId) {
         try {
             String email = appUserService.getUserEmail(authorizationHeader);
@@ -88,6 +88,47 @@ public class CartController {
             return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (JwtException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PostMapping("/unsigned")
+    ResponseEntity addNewUnsignedCart(){
+        Long id = cartService.addNewUnsignedCart();
+        return ResponseEntity.ok(Map.of("cartId",id));
+    }
+
+    @PostMapping("/addToUnsigned")
+    ResponseEntity addToUnsignedCart(@RequestParam Long cartId, @RequestParam String productName, @RequestParam int quantity) {
+        try {
+            return ResponseEntity.ok(cartService.addToUnsignedCart(cartId, productName, quantity));
+        } catch (CartNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (ProductNotFound e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("removeFromUnsigned")
+    ResponseEntity removeFromUnsigned(@RequestParam Long cartId, @RequestParam String productName) {
+        try {
+            return ResponseEntity.ok(cartService.removeToUnsignedCart(cartId, productName));
+        } catch (CartNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (ProductNotFound e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (CartItemNotInCartException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PostMapping("/setUser")
+    ResponseEntity setUser(@RequestParam Long cartId, @RequestParam String email) {
+        try {
+            return ResponseEntity.ok(cartService.setUser(cartId, email));
+        } catch (CartNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }
