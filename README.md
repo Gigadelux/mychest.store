@@ -9,7 +9,8 @@ At mychest.store, we understand the thrill of discovering new games and the joy 
 ### Backend Tools:
 - Spring Boot: A powerful Java framework for building backend applications. It provides a comprehensive set of features and tools to develop robust and scalable web applications.
 - PostgreSQL: A popular open-source relational database management system. It offers advanced features and excellent performance for storing and retrieving data in backend applications.
-- Weaviate: A knowledge graph-based search engine that allows you to build intelligent applications with natural language processing capabilities.
+- Weaviate: A knowledge graph-based search engine that allows you to build intelligent applications with natural language processing capabilities. (To implement for reccomendations)
+- Google GEMINI: An LLM implemented as an assistant in the app to reccomend some new games (future implementations with langchain)
 
 ### Frontend Framework:
 - Flutter: A cross-platform framework for building beautiful and native-like user interfaces. It enables developers to create stunning mobile, web, and desktop applications using a single codebase.

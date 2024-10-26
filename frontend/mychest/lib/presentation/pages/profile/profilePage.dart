@@ -5,6 +5,7 @@ import 'package:mychest/data/models/profile.dart';
 import 'package:mychest/global/colors/colorsScheme.dart';
 import 'package:mychest/presentation/state_manager/providers/appProviders.dart';
 import 'package:mychest/presentation/widgets/gradientOutlineButton.dart';
+import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   final Profile profile;
@@ -58,19 +59,30 @@ class _ProfilePageConsumerState extends ConsumerState<ProfilePage> {
               width: MediaQuery.of(context).size.width,
               height: 300,
               child:widget.profile.orderBuckets.isNotEmpty? ListView.builder(
+                itemCount: widget.profile.orderBuckets.length,
                 itemBuilder: 
                   (context, index)=> SizedBox(
+                    height: 200,
                     child: Column(
                       children: [
-                        Text(
+                        GradientText(
                           widget.profile.orderBuckets[index].createdAt,
-                          style: const TextStyle(color: Colors.white),
+                          colors: gradient,
                         ),
                         ...List.generate(
                           widget.profile.orderBuckets[index].keys.length, 
-                          (index)=> Text(
-                            widget.profile.orderBuckets[index].keys[index].activationKey, 
-                            style: const TextStyle(color: Colors.white),
+                          (indexKey)=> Column(
+                            children: [
+                              Text(
+                                widget.profile.orderBuckets[index].keys[indexKey].productName,
+                                style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 5,),
+                              Text(
+                                widget.profile.orderBuckets[index].keys[indexKey].activationKey, 
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ],
                           )
                         ),
                       ],

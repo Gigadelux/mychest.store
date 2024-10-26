@@ -25,6 +25,7 @@ public class Order {
 
     private String postalCode;
 
+    @JsonIgnore
     @ManyToOne
     private AppUser user;
 
@@ -32,6 +33,6 @@ public class Order {
     @OneToOne
     private CreditCard creditCard;
 
-    @OneToMany
+    @OneToMany(mappedBy = "order")
     private List<Key> keys;
 }

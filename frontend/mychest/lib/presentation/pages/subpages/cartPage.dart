@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mychest/core/API/app_userAPI.dart';
 import 'package:mychest/data/models/CartItem.dart';
 import 'package:mychest/data/models/creditCard.dart';
 import 'package:mychest/global/colors/colorsScheme.dart';
+import 'package:mychest/presentation/state_manager/CartStateNotifier.dart';
 import 'package:mychest/presentation/state_manager/providers/appProviders.dart';
 import 'package:mychest/presentation/widgets/editCreditCard.dart';
 import 'package:mychest/presentation/widgets/gradientButton.dart';
@@ -45,6 +47,8 @@ class _CartpageConsumerState extends ConsumerState<Cartpage> {
       print("NUMERO CREDITCARD: ${card.cardNumber}");
     });
   }
+
+
   double calculatePrice(){
     double res = 0;
     for(CartItem cartItem in cartItems){
@@ -71,7 +75,8 @@ class _CartpageConsumerState extends ConsumerState<Cartpage> {
       Fluttertoast.showToast(msg: 'Added 🥳');
     }
     setState(() {
-      
+      cartItems = ref.watch(CartNotifierProvider).getObject.cartItems;
+      totalPrice = calculatePrice();
     });
   }
 
@@ -92,7 +97,8 @@ class _CartpageConsumerState extends ConsumerState<Cartpage> {
       Fluttertoast.showToast(msg: 'Removed');
     }
     setState(() {
-      
+      cartItems = ref.watch(CartNotifierProvider).getObject.cartItems;
+      totalPrice = calculatePrice();
     });
   }
 
@@ -229,6 +235,11 @@ class _CartpageConsumerState extends ConsumerState<Cartpage> {
                 ),
                 const SizedBox(height: 20,),
                 GradientButton(text: "Buy", onPressed: ()async{
+                bool authenticated = !(ref.watch(TokenNotifierProvider) == null || ref.watch(TokenNotifierProvider)!.isEmpty);
+                if(!authenticated || ! await AppUserAPI().isTokenValid(ref.watch(TokenNotifierProvider))){
+                  Fluttertoast.showToast(msg: "Login first🥺", toastLength: Toast.LENGTH_SHORT);
+                  return;
+                }
                   await ref.read(CartNotifierProvider.notifier).pay(postalCodeController.text);
                   if(ref.read(CartNotifierProvider).getStatusCode != 200){
                     Fluttertoast.showToast(msg: "Failed to pay");

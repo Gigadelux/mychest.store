@@ -17,7 +17,7 @@ class ProductPage extends ConsumerStatefulWidget {
 }
 
 class _ProductPageConsumerState extends ConsumerState<ProductPage> {
-  int productQuantity = 0;
+  int productQuantity = 1;
 
   List<Widget> resposiveWidgets(bool isMobile){
     return [
@@ -66,7 +66,7 @@ class _ProductPageConsumerState extends ConsumerState<ProductPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           IconButton(onPressed: ()=>setState(() {
-                            if(productQuantity>0) {
+                            if(productQuantity>1) {
                               productQuantity = productQuantity-1;
                             }
                           }), icon: const Icon(Icons.remove_rounded, color: Colors.white,size: 22,)),
@@ -104,7 +104,7 @@ class _ProductPageConsumerState extends ConsumerState<ProductPage> {
       Fluttertoast.showToast(msg: 'Added x$productQuantity 🥳');
     }
     setState(() {
-      productQuantity = 0;
+      productQuantity = 1;
     });
   }
 

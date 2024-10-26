@@ -21,7 +21,7 @@ public class AppUser {
     @JoinColumn(name = "credit_card_id", referencedColumnName = "id")
     private CreditCard credit_card;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
     @OneToMany(fetch = FetchType.EAGER)

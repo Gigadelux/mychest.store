@@ -1,5 +1,6 @@
 package com.gigadelux.mychest.entity.Product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gigadelux.mychest.entity.User.Order;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,11 +18,12 @@ public class Key {
     @Column(unique = true)
     private String activationKey;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Product product;
 
     private String productName;
 
+    @JsonIgnore
     @ManyToOne
     private Order order;
 }

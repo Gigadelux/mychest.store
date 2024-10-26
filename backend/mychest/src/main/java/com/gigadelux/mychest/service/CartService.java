@@ -43,11 +43,9 @@ public class CartService {
     }
 
 
-    public Cart get(String userEmail, Long cartId) throws CartNotFoundException, UserNotOfCartException, UserNotFoundException {
+    public Cart get(Long cartId) throws CartNotFoundException, UserNotOfCartException, UserNotFoundException {
         if(!cartRepository.existsById(cartId)) throw new CartNotFoundException();
         System.out.println(cartRepository.getReferenceById(cartId));
-        if(!cartRepository.getReferenceById(cartId).getUser().getEmail().equals(userEmail)) throw new UserNotOfCartException();
-        if(!appUserRepository.existsByEmail(userEmail)) throw new UserNotFoundException();
         Cart c = cartRepository.getReferenceById(cartId);
         c.setCartItem(cartItemRepository.findByCart(c));
         return c;
@@ -133,10 +131,13 @@ public class CartService {
         Cart c = cartRepository.getReferenceById(cartId);
         for(CartItem i:c.getCartItem()){
             if(i.getProduct().getName().equals(productName)){
-                if(i.getQuantity()>0) {
+                if(i.getQuantity()>1) {
                     i.setQuantity(i.getQuantity() - 1);
                     cartItemRepository.save(i);
                 }else{
+                    List<CartItem> cartItems = c.getCartItem();
+                    cartItems.remove(i);
+                    c.setCartItem(cartItems);
                     cartItemRepository.delete(i);
                 }
                 cartRepository.save(c);

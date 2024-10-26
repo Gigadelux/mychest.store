@@ -75,10 +75,9 @@ public class CartController {
     }
 
     @GetMapping("/get")
-    ResponseEntity getCart(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestParam Long cartId) {
+    ResponseEntity getCart(@RequestParam Long cartId) {
         try {
-            String email = appUserService.getUserEmail(authorizationHeader);
-            Cart c = cartService.get(email, cartId);
+            Cart c = cartService.get(cartId);
             return ResponseEntity.ok(c);
         } catch (CartNotFoundException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -122,8 +121,9 @@ public class CartController {
     }
 
     @PostMapping("/setUser")
-    ResponseEntity setUser(@RequestParam Long cartId, @RequestParam String email) {
+    ResponseEntity setUser(@RequestParam Long cartId, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         try {
+            String email = appUserService.getUserEmail(authorizationHeader);
             return ResponseEntity.ok(cartService.setUser(cartId, email));
         } catch (CartNotFoundException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);

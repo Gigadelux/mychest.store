@@ -11,8 +11,7 @@ class ProductKey {
       productName: json['productName'],
     );
   }
-  static List<ProductKey> fromJsonList(Map<String, dynamic> json) {
-    var keysJson = json['keys'] as List;
-    return keysJson.map((keyJson) => ProductKey.fromJson(keyJson)).toList();
+  static List<ProductKey> fromJsonList(List keys) {
+    return keys.map((keyJson) => ProductKey.fromJson(keyJson)).toList();
   }
 }

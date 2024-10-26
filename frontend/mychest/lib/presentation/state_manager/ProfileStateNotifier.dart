@@ -26,9 +26,8 @@ class ProfileNotifier extends StateNotifier<Profile>{
       creditCard = CreditCard.fromJson(response['credit_card']);
       orderBuckets = OrderBucket.fromJsonList(response['orders']);
     }catch(e){
-      print(e);
+      print("ZIOPERONI PEPPEROPOLI $e");
     }
-    print(response);
     Profile p = Profile(response['email'], creditCard ?? CreditCard.empty(),orderBuckets);
     state = p;
   }

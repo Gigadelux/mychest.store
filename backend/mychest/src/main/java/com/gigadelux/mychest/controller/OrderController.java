@@ -54,20 +54,20 @@ public class OrderController {
             return new ResponseEntity(e.getMessage(),HttpStatus.UNAUTHORIZED);
         }catch (JwtException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (CartNotFoundException e) {
+            return new ResponseEntity(e.getMessage(),HttpStatus.NOT_FOUND);
         }
     }
 
-    @PreAuthorize("hasRole('clientUser')")
+    //@PreAuthorize("hasRole('clientUser')")
     @GetMapping("/getOrders")
-    ResponseEntity getOrders(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
+    ResponseEntity getOrders(@RequestParam String email){
         try {
-            String email = appUserService.getUserEmail(authorizationHeader);
+            //String email = appUserService.getUserEmail(authorizationHeader);
             List<Order> orders = orderService.getAllOrdersByUser(email);
             return ResponseEntity.ok(orders);
         } catch (UserNotFoundException e) {
             return new ResponseEntity(e.getMessage(),HttpStatus.NOT_FOUND);
-        }catch (JwtException e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 }

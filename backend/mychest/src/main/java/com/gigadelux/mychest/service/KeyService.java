@@ -31,6 +31,7 @@ public class KeyService {
         Key k = new Key();
         Product p = productRepository.getReferenceById(productId);
         k.setProduct(p);
+        k.setProductName(p.getName());
         k.setActivationKey(activationKey);
         p.setQuantity(p.getQuantity()+1);
         productRepository.save(p);

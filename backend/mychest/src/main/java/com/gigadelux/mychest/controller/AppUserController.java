@@ -35,16 +35,13 @@ public class AppUserController {
     ResponseEntity newUser(@RequestParam String email, @RequestParam String password){
         try {
             appUserService.addUser(email,password);
-            Long cartId = cartService.addNewCart(email);
-            return ResponseEntity.ok(Map.of("cartId", cartId));
+            return ResponseEntity.ok("user successfuly added");
         } catch (EmailAlreadyExistsException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }catch (WeakPasswordException e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }catch (InvalidEmailException e){
             return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity("Failed to add user cart", HttpStatus.NOT_FOUND);
         }
     }
 

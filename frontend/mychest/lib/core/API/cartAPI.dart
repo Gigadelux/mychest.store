@@ -44,7 +44,7 @@ class CartAPI {
         'message': 'Item added to cart',
       };
     }
-    final response = await http.post(
+    final response = await http.get(
       Uri.parse("$getCartPath?cartId=$cartId"),
       headers: {
         "Authorization":"Bearer $token"
@@ -85,7 +85,7 @@ class CartAPI {
     } else {
       return {
         'status': response.statusCode,
-        'message': 'Failed to add item to cart',
+        'message': response.body,
         'error': json.decode(response.body)
       };
     }

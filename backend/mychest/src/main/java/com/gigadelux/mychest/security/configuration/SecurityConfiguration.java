@@ -38,6 +38,10 @@ public class SecurityConfiguration {
                         .requestMatchers("/category/mostPopular").permitAll()
                         .requestMatchers("aiAssistant/reccomendProducts").permitAll()
                         .requestMatchers("aiAssistant/newReccomendation").permitAll()
+                        .requestMatchers("cart/addToUnsigned").permitAll()
+                        .requestMatchers("cart/removeFromUnsigned").permitAll()
+                        .requestMatchers("cart/setUser").permitAll()
+                        .requestMatchers("cart/unsigned").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
