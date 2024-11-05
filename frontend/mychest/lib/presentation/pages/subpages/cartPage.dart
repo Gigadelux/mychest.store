@@ -11,6 +11,7 @@ import 'package:mychest/presentation/widgets/editCreditCard.dart';
 import 'package:mychest/presentation/widgets/gradientButton.dart';
 import 'package:mychest/presentation/widgets/gradientOutlineButton.dart';
 import 'package:mychest/presentation/widgets/universal/RequestWidgetTree.dart';
+import 'package:mychest/presentation/widgets/universal/SimpleAlert.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:unicons/unicons.dart';
 
@@ -242,11 +243,11 @@ class _CartpageConsumerState extends ConsumerState<Cartpage> {
                 }
                   await ref.read(CartNotifierProvider.notifier).pay(postalCodeController.text);
                   if(ref.read(CartNotifierProvider).getStatusCode != 200){
-                    Fluttertoast.showToast(msg: "Failed to pay");
+                    await showSimpleAlert(context, "Failed to pay😔");
                     print(ref.read(CartNotifierProvider).errorMessage);
                     return;
                   }
-                  Fluttertoast.showToast(msg: "Thank you!🥳");
+                  await showSimpleAlert(context, 'Thank you!🥳');
                   Navigator.pop(context);
                 }, height: 40,width: 60),
                 Row(

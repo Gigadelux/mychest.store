@@ -19,7 +19,7 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id",unique = false)
     private Product product;
-
+    //TODO save the price of the product and check it on pay
     private int quantity=1;
 
     @JsonIgnore

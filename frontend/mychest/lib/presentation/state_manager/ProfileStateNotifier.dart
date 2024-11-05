@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mychest/core/API/app_userAPI.dart';
@@ -5,6 +6,7 @@ import 'package:mychest/core/API/creditCardAPI.dart';
 import 'package:mychest/data/models/OrderBucket.dart';
 import 'package:mychest/data/models/creditCard.dart';
 import 'package:mychest/data/models/profile.dart';
+import 'package:mychest/presentation/widgets/universal/SimpleAlert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileNotifier extends StateNotifier<Profile>{
@@ -32,12 +34,12 @@ class ProfileNotifier extends StateNotifier<Profile>{
     state = p;
   }
 
-  setCreditCard(String cardNumber,String passCode,String expireTime)async{
+  setCreditCard(BuildContext context, String cardNumber,String passCode,String expireTime)async{
     Map res = await CreditCardAPI().setCreditCard(cardNumber, passCode, expireTime);
     if(res['status']==200){
       Profile p = Profile(state.email, CreditCard(cardNumber: cardNumber, passCode: passCode, expireTime: expireTime), state.orderBuckets);
       state = p;
-      Fluttertoast.showToast(msg: "Credit card edited🥳");
+      showSimpleAlert(context, "Credit card set🥳");
     }
     else{
       Fluttertoast.showToast(msg: "failed to set");

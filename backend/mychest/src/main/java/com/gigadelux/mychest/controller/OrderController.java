@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +28,9 @@ public class OrderController {
 
 
     @PostMapping("/pay")
-    ResponseEntity pay(@RequestParam String postalCode,@RequestParam Long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
+    ResponseEntity pay(@RequestParam String postalCode, @RequestParam Long id, Authentication auth){
         try {
-            String email = appUserService.getUserEmail(authorizationHeader);
+            String email = auth.getName();
             Long newCartID = orderService.insertOrder(email,postalCode,id);
             return ResponseEntity.ok(Map.of("newCartID",newCartID));
         } catch (EmptyCartException e) {

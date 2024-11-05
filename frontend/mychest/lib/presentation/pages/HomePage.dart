@@ -10,6 +10,7 @@ import 'package:mychest/presentation/pages/profile/profilePage.dart';
 import 'package:mychest/presentation/pages/subpages/search.dart';
 import 'package:mychest/presentation/state_manager/providers/appProviders.dart';
 import 'package:mychest/presentation/widgets/minichat.dart';
+import 'package:mychest/presentation/widgets/universal/SimpleAlert.dart';
 import 'package:unicons/unicons.dart';
 import 'package:scaffold_responsive/scaffold_responsive.dart';
 import 'package:fluttertoast/fluttertoast.dart';

@@ -6,6 +6,7 @@ import 'package:mychest/data/models/product.dart';
 import 'package:mychest/global/colors/colorsScheme.dart';
 import 'package:mychest/presentation/state_manager/providers/appProviders.dart';
 import 'package:mychest/presentation/widgets/gradientButton.dart';
+import 'package:mychest/presentation/widgets/universal/SimpleAlert.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class ProductPage extends ConsumerStatefulWidget {
@@ -101,7 +102,8 @@ class _ProductPageConsumerState extends ConsumerState<ProductPage> {
       Fluttertoast.showToast(msg: 'Error adding cart');
       return;
     }else{
-      Fluttertoast.showToast(msg: 'Added x$productQuantity 🥳');
+      await showSimpleAlert(context, 'Added x$productQuantity 🥳');
+      //Fluttertoast.showToast(msg: 'Added x$productQuantity 🥳');
     }
     setState(() {
       productQuantity = 1;

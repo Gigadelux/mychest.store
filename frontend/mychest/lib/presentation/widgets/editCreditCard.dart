@@ -72,7 +72,7 @@ Future<void> editCreditCardMenu(BuildContext context, Function onPressed, Functi
         Fluttertoast.showToast(msg: "Invalid card detected");
         return false;
       }
-      await ref.read(ProfileNotifierProvider.notifier).setCreditCard(cardNumber, passCode, expireTime);
+      await ref.read(ProfileNotifierProvider.notifier).setCreditCard(context,cardNumber, passCode, expireTime);
     },
     (){
 

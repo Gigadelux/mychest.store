@@ -16,3 +16,4 @@ At mychest.store, we understand the thrill of discovering new games and the joy 
 - Flutter: A cross-platform framework for building beautiful and native-like user interfaces. It enables developers to create stunning mobile, web, and desktop applications using a single codebase.
 
 With these tools and frameworks, you can build a full-stack application that seamlessly integrates the backend functionalities with a visually appealing and responsive frontend. Enjoy the power of Spring Boot, PostgreSQL, Weaviate, and Flutter to create amazing gaming experiences for your users.
+For images => flutter run -d chrome --web-renderer html
